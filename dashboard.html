@@ -1,0 +1,2167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — STACKLY Furniture & Living</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    :root {
+      --bg-dash: #f7f4ef;
+      --sidebar-bg: #ffffff;
+      --card-bg: #ffffff;
+      --text-main: #201c18;
+      --text-muted: #746c63;
+      --accent-cyan: #c28552;
+      --accent-dark: #9e6236;
+      --accent-soft: #fcf4eb;
+      --accent-blue: #d48b59;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dash);
+      color: var(--text-main);
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      cursor: auto;
+    }
+
+    body.dashboard-page,
+    body.dashboard-page * {
+      cursor: auto;
+    }
+
+    body.dashboard-page a,
+    body.dashboard-page button,
+    body.dashboard-page .menu-item,
+    body.dashboard-page .chart-filter-btn,
+    body.dashboard-page .vendor-action-btn,
+    body.dashboard-page .bar-col {
+      cursor: pointer;
+    }
+
+    body.dashboard-page .cursor,
+    body.dashboard-page .cursor-follower {
+      display: none !important;
+    }
+
+    .dashboard-container {
+      display: flex;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Sidebar Overlay Backdrop for Mobile */
+    .sidebar-backdrop {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(18, 16, 14, 0.55);
+      backdrop-filter: blur(3px);
+      z-index: 1040;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .sidebar-backdrop.show {
+      display: block;
+      opacity: 1;
+    }
+
+    .sidebar {
+      width: 260px;
+      background-color: var(--sidebar-bg);
+      border-right: 1px solid rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2rem 1.5rem;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1050;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow-y: auto;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .sidebar-close-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      color: var(--text-main);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .sidebar-close-btn:hover {
+      background: rgba(194, 133, 82, 0.12);
+      color: var(--accent-cyan);
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+      margin: 1.75rem 0 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.85rem 1.25rem;
+      border-radius: var(--radius-md);
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .menu-item i {
+      font-size: 1.1rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    .menu-item:hover {
+      background-color: rgba(194, 133, 82, 0.08);
+      color: var(--accent-cyan);
+    }
+
+    .menu-item.active {
+      background-color: var(--accent-soft);
+      color: var(--accent-dark);
+      font-weight: 600;
+      border-left: 4px solid var(--accent-cyan);
+      box-shadow: inset 0 0 0 1px rgba(194, 133, 82, 0.2);
+    }
+
+    .main-content {
+      margin-left: 260px;
+      flex: 1;
+      padding: 2rem 2.5rem;
+      width: calc(100% - 260px);
+      box-sizing: border-box;
+      min-width: 0;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2.5rem;
+    }
+
+    .top-bar-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 0;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .current-section-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--card-bg);
+      padding: 0.35rem 0.85rem;
+      border-radius: 99px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border: 1px solid rgba(0,0,0,0.06);
+      margin-top: 0.35rem;
+    }
+
+    .profile-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-lg);
+      background: var(--card-bg);
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .profile-avatar {
+      width: 38px;
+      height: 38px;
+      background: var(--accent-cyan);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    /* Overview Grid */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 240px 1fr 300px;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .metrics-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .metric-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      border: 1px solid rgba(0,0,0,0.04);
+      transition: var(--transition);
+    }
+
+    .metric-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+    }
+
+    .metric-title {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.65rem;
+      font-weight: 700;
+      margin: 0;
+      color: var(--text-main);
+    }
+
+    .chart-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      border: 1px solid rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      min-width: 0;
+    }
+
+    .chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .chart-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .chart-filters {
+      display: flex;
+      background: var(--surface-2);
+      padding: 3px;
+      border-radius: 8px;
+      gap: 2px;
+      white-space: nowrap;
+    }
+
+    .chart-filter-btn {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      border: none;
+      background: transparent;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .chart-filter-btn.active, .chart-filter-btn:hover {
+      background: #ffffff;
+      color: var(--text-main);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    }
+
+    .chart-bars-wrap {
+      height: 180px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 1rem 0 0 0;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .bar-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    .bar-fill {
+      width: 22px;
+      background: linear-gradient(180deg, var(--accent-cyan) 0%, #d49b6a 100%);
+      border-radius: 6px 6px 0 0;
+    }
+
+    .bar-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .chart-sub-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .donut-visual-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .donut-chart {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: conic-gradient(var(--accent-cyan) 0% 68%, var(--accent-blue) 68% 100%);
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .donut-inner {
+      position: absolute;
+      top: 15px; left: 15px; right: 15px; bottom: 15px;
+      background: var(--card-bg);
+      border-radius: 50%;
+    }
+
+    .donut-legend {
+      list-style: none;
+      padding: 0; margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .legend-item {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .legend-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .freq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .freq-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      font-size: 0.78rem;
+    }
+
+    .freq-name {
+      color: var(--text-main);
+      font-weight: 500;
+      width: 140px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .freq-bar-wrap {
+      flex: 1;
+      height: 6px;
+      background: #f1f5f9;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .freq-bar-fill {
+      height: 100%;
+      background: var(--accent-cyan);
+      border-radius: 99px;
+    }
+
+    .vendors-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .vendor-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1.25rem;
+    }
+
+    .vendor-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .vendor-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      min-width: 0;
+    }
+
+    .vendor-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: #e2d9cf;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: var(--text-main);
+      flex-shrink: 0;
+    }
+
+    .vendor-name {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .vendor-role {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .vendor-action-btn {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      background: var(--surface-2);
+      border: none;
+      transition: var(--transition);
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .vendor-action-btn:hover {
+      background: var(--accent-cyan);
+      color: #ffffff;
+    }
+
+    .deals-section {
+      margin-top: 2rem;
+    }
+
+    .deals-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+    }
+
+    .deal-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      border: 1px solid rgba(0,0,0,0.04);
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      transition: var(--transition);
+    }
+
+    .deal-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+    }
+
+    .deal-img-wrap {
+      width: 120px;
+      height: 100px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .deal-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .deal-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-dark);
+      background: var(--accent-soft);
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      margin-bottom: 0.35rem;
+    }
+
+    .deal-name {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0 0 0.25rem 0;
+    }
+
+    .deal-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin: 0 0 0.5rem 0;
+    }
+
+    .deal-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .dash-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      border: 1px solid rgba(0,0,0,0.04);
+      min-width: 0;
+    }
+
+    .dash-title {
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .status-processing {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-delivered {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .mobile-nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.35rem;
+      color: var(--text-main);
+      padding: 6px;
+      cursor: pointer;
+    }
+
+    /* Delivery Timeline */
+    .delivery-timeline {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin: 1.75rem 0 1rem;
+    }
+
+    .delivery-timeline::before {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: 10%;
+      right: 10%;
+      height: 3px;
+      background: #e2d9cf;
+      z-index: 1;
+    }
+
+    .timeline-step {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      flex: 1;
+    }
+
+    .timeline-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--surface-2);
+      border: 2px solid #e2d9cf;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.5rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .timeline-step.completed .timeline-dot {
+      background: var(--accent-cyan);
+      border-color: var(--accent-cyan);
+      color: #ffffff;
+    }
+
+    .timeline-step.active .timeline-dot {
+      background: #ffffff;
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      box-shadow: 0 0 0 4px rgba(194, 133, 82, 0.25);
+    }
+
+    .table-responsive {
+      -webkit-overflow-scrolling: touch;
+      border-radius: var(--radius-sm);
+    }
+
+    .table-responsive .table {
+      min-width: 620px;
+    }
+
+    /* ========================================================
+       RESPONSIVE BREAKPOINTS (Mobile & Tablet)
+       ======================================================== */
+    @media (max-width: 1200px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+      .metrics-col {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+    }
+
+    @media (max-width: 992px) {
+      .sidebar {
+        transform: translateX(-100%);
+        width: 280px;
+        max-width: 85vw;
+        box-shadow: 0 0 30px rgba(0,0,0,0.3);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .sidebar-close-btn {
+        display: flex;
+      }
+      /* Fixed Mobile Header */
+      .top-bar {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        z-index: 1030 !important;
+        background: rgba(247, 244, 239, 0.96) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        border-bottom: 1px solid rgba(194, 133, 82, 0.2) !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
+        padding: 0.65rem 1.25rem !important;
+        margin-bottom: 0 !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        box-sizing: border-box !important;
+      }
+      .main-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 1.25rem 1.25rem;
+        padding-top: 110px; /* Offset for fixed header */
+      }
+      .mobile-nav-toggle {
+        display: inline-flex;
+      }
+      .top-bar-title {
+        font-size: 1.3rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .top-bar {
+        padding: 0.6rem 1rem !important;
+      }
+      .main-content {
+        padding: 1.25rem 1rem;
+        padding-top: 105px;
+      }
+      .top-bar-title {
+        font-size: 1.2rem;
+      }
+      .chart-sub-split {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+      }
+      .metrics-col {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+      }
+      .metric-card {
+        padding: 1.25rem 1rem;
+      }
+      .metric-value {
+        font-size: 1.4rem;
+      }
+      .dash-card, .chart-card, .vendors-card {
+        padding: 1.25rem 1rem;
+        border-radius: var(--radius-md);
+      }
+    }
+
+    @media (max-width: 576px) {
+      .top-bar {
+        padding: 0.5rem 0.75rem !important;
+      }
+      .main-content {
+        padding: 1rem 0.75rem;
+        padding-top: 100px;
+      }
+      .top-bar-title {
+        font-size: 1.1rem;
+      }
+      .current-section-pill {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.55rem;
+      }
+      .metrics-col {
+        grid-template-columns: 1fr;
+      }
+      .deal-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .deal-img-wrap {
+        width: 100%;
+        height: 170px;
+      }
+      .chart-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+      .chart-filters {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 4px;
+      }
+      .donut-visual-wrap {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      .delivery-timeline {
+        flex-direction: column;
+        gap: 1.25rem;
+        padding-left: 1.75rem;
+        margin: 1.5rem 0;
+        align-items: flex-start;
+      }
+      .delivery-timeline::before {
+        top: 8px;
+        bottom: 8px;
+        left: 15px;
+        width: 2px;
+        height: auto;
+        right: auto;
+      }
+      .timeline-step {
+        display: flex;
+        align-items: center;
+        text-align: left;
+        gap: 1rem;
+        flex: none;
+        width: 100%;
+      }
+      .timeline-dot {
+        margin: 0;
+        flex-shrink: 0;
+      }
+    }
+  </style>
+</head>
+<body class="dashboard-page">
+
+  <!-- Mobile Sidebar Backdrop Overlay -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Loader -->
+  <div class="page-loader" id="pageLoader">
+    <div class="loader-inner">
+      <div class="loader-icon"><i class="fas fa-couch"></i></div>
+      <div class="loader-logo">
+        <img src="stacklylogo-transparent.webp" alt="STACKLY Furniture" class="loader-logo-img" />
+      </div>
+      <div class="loader-bar"><div class="loader-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- Layout Container -->
+  <div class="dashboard-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div>
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <a href="index.html" class="sidebar-logo" style="background: #1a1714; padding: 0.85rem 1rem; border-radius: var(--radius-md);">
+            <img src="stacklylogo-transparent.webp" alt="STACKLY Furniture" style="height: 36px; width: auto; object-fit: contain;" />
+          </a>
+          <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close Sidebar">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <!-- CUSTOMER SIDEBAR MENU -->
+        <nav id="customerSidebarNav">
+          <ul class="sidebar-menu">
+            <li><a href="#" class="menu-item active" data-tab="dashboard"><i class="fas fa-th-large"></i> Overview</a></li>
+            <li><a href="#" class="menu-item" data-tab="furniture"><i class="fas fa-couch"></i> Browse Furniture</a></li>
+            <li><a href="#" class="menu-item" data-tab="orders"><i class="fas fa-shopping-bag"></i> My Orders</a></li>
+            <li><a href="#" class="menu-item" data-tab="consultations"><i class="fas fa-calendar-check"></i> Consultations</a></li>
+            <li><a href="#" class="menu-item" data-tab="setting"><i class="fas fa-cog"></i> Account Settings</a></li>
+          </ul>
+        </nav>
+
+        <!-- ADMIN SIDEBAR MENU -->
+        <nav id="adminSidebarNav" class="d-none">
+          <ul class="sidebar-menu">
+            <li><a href="#" class="menu-item active" data-tab="dashboard"><i class="fas fa-chart-line"></i> Store Overview</a></li>
+            <li><a href="#" class="menu-item" data-tab="furniture"><i class="fas fa-couch"></i> Furniture Inventory</a></li>
+            <li><a href="#" class="menu-item" data-tab="customers"><i class="fas fa-users"></i> Client Directory</a></li>
+            <li><a href="#" class="menu-item" data-tab="orders"><i class="fas fa-clipboard-list"></i> Store Orders</a></li>
+            <li><a href="#" class="menu-item" data-tab="reports"><i class="fas fa-chart-bar"></i> Financial Reports</a></li>
+            <li><a href="#" class="menu-item" data-tab="setting"><i class="fas fa-sliders-h"></i> Store Settings</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="sidebar-footer pt-4">
+        <a href="#" id="logoutLink" class="menu-item" style="color: #dc3545;"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      
+      <!-- Top Bar (Fixed on Mobile) -->
+      <header class="top-bar" id="dashboardTopBar">
+        <div class="top-bar-row-main d-flex align-items-center justify-content-between w-100">
+          <div class="d-flex align-items-center gap-2 gap-sm-3">
+            <button class="mobile-nav-toggle" id="sidebarToggle" aria-label="Open Sidebar Menu">
+              <i class="fas fa-bars"></i>
+            </button>
+            <div>
+              <h1 class="top-bar-title" id="dashTitle">My Living Sanctuary</h1>
+              <span class="current-section-pill" id="currentSectionLabel">
+                <i class="fas fa-location-dot"></i> Overview
+              </span>
+            </div>
+          </div>
+          
+          <!-- Desktop Controls -->
+          <div class="top-bar-right d-none d-lg-flex align-items-center">
+            <!-- Role Switcher Toggle (Desktop) -->
+            <div class="role-switcher-badge d-flex align-items-center gap-1 me-3" style="background: var(--surface-2); padding: 4px; border-radius: 99px; border: 1px solid rgba(194, 133, 82, 0.25);">
+              <button type="button" class="btn btn-sm role-toggle-btn roleBtnCustomer active" style="border-radius: 99px; font-size: 0.75rem; font-weight: 600; padding: 5px 14px; border: none; transition: var(--transition);">Customer View</button>
+              <button type="button" class="btn btn-sm role-toggle-btn roleBtnAdmin" style="border-radius: 99px; font-size: 0.75rem; font-weight: 600; padding: 5px 14px; border: none; transition: var(--transition); background: transparent; color: var(--text-muted);">Admin View</button>
+            </div>
+
+            <!-- Profile Badge (Desktop) -->
+            <div class="profile-btn">
+              <div class="profile-avatar avatarInitial">U</div>
+              <div>
+                <div style="font-size: 0.85rem; font-weight: 600;" class="userProfileName">Sarah Miller</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 400;" class="userProfileEmail">sarah.m@example.com</div>
+                <span style="font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; padding: 2px 7px; border-radius: 4px; background: var(--accent-cyan); color: #ffffff;" class="userProfileRole">CUSTOMER</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mobile Compact Profile Pill (Visible on mobile on the top right) -->
+          <div class="d-flex d-lg-none align-items-center gap-2">
+            <span class="userProfileRole" style="font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 8px; border-radius: 99px; background: var(--accent-cyan); color: #ffffff;">CUSTOMER</span>
+            <div class="profile-avatar avatarInitial" style="width: 32px; height: 32px; font-size: 0.85rem;">S</div>
+          </div>
+        </div>
+
+        <!-- Mobile Role Switcher Bar (Fixed underneath top row on mobile) -->
+        <div class="top-bar-mobile-row d-flex d-lg-none w-100 mt-2">
+          <div class="role-switcher-badge d-flex align-items-center w-100" style="background: var(--surface-2); padding: 3px; border-radius: 99px; border: 1px solid rgba(194, 133, 82, 0.25);">
+            <button type="button" class="btn btn-sm role-toggle-btn roleBtnCustomer active flex-fill" style="border-radius: 99px; font-size: 0.75rem; font-weight: 600; padding: 5px 10px; border: none; transition: var(--transition);">Customer View</button>
+            <button type="button" class="btn btn-sm role-toggle-btn roleBtnAdmin flex-fill" style="border-radius: 99px; font-size: 0.75rem; font-weight: 600; padding: 5px 10px; border: none; transition: var(--transition); background: transparent; color: var(--text-muted);">Admin View</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- ===== 1. DASHBOARD OVERVIEW PANEL ===== -->
+      <div id="panel-dashboard" class="tab-panel">
+        
+        <!-- === CUSTOMER DASHBOARD VIEW === -->
+        <div id="viewCustomerDashboard">
+          <div class="dashboard-grid">
+            <!-- Customer Metrics -->
+            <div class="metrics-col">
+              <div class="metric-card">
+                <div class="metric-title"><i class="fas fa-gift me-1" style="color:var(--accent-cyan)"></i> Rewards Credit</div>
+                <h2 class="metric-value">$350.00</h2>
+              </div>
+              <div class="metric-card">
+                <div class="metric-title"><i class="fas fa-wallet me-1" style="color:var(--accent-cyan)"></i> Furniture Invested</div>
+                <h2 class="metric-value">$3,600.00</h2>
+              </div>
+              <div class="metric-card">
+                <div class="metric-title"><i class="fas fa-couch me-1" style="color:var(--accent-cyan)"></i> Pieces in Home</div>
+                <h2 class="metric-value">3 Delivered</h2>
+              </div>
+              <div class="metric-card">
+                <div class="metric-title"><i class="fas fa-truck-moving me-1" style="color:var(--accent-cyan)"></i> Active Delivery</div>
+                <h2 class="metric-value" style="font-size: 1.25rem; color: #166534;">Arriving Oct 28</h2>
+              </div>
+            </div>
+
+            <!-- Customer Room Spend Chart -->
+            <div class="chart-card">
+              <div class="chart-header">
+                <div>
+                  <h2 class="chart-title">My Living Spaces Investment</h2>
+                  <p class="text-muted mb-0" style="font-size: 0.8rem;">Furniture acquisitions curated by room</p>
+                </div>
+                <div class="chart-filters">
+                  <button type="button" onclick="window.location.href='404.html'" class="chart-filter-btn active">All Rooms</button>
+                  <button type="button" onclick="window.location.href='404.html'" class="chart-filter-btn">Living Room</button>
+                  <button type="button" onclick="window.location.href='404.html'" class="chart-filter-btn">Dining Area</button>
+                  <button type="button" onclick="window.location.href='404.html'" class="chart-filter-btn">Bedroom</button>
+                </div>
+              </div>
+
+              <!-- Bar visual -->
+              <div class="chart-bars-wrap">
+                <div class="bar-col">
+                  <div class="bar-fill" style="height: 85%;"></div>
+                  <span class="bar-label">Living ($1,850)</span>
+                </div>
+                <div class="bar-col">
+                  <div class="bar-fill" style="height: 48%; background: var(--accent-blue);"></div>
+                  <span class="bar-label">Bedroom ($890)</span>
+                </div>
+                <div class="bar-col">
+                  <div class="bar-fill" style="height: 65%;"></div>
+                  <span class="bar-label">Dining ($1,150)</span>
+                </div>
+                <div class="bar-col">
+                  <div class="bar-fill" style="height: 30%; background: #d49b6a;"></div>
+                  <span class="bar-label">Office ($420)</span>
+                </div>
+                <div class="bar-col">
+                  <div class="bar-fill" style="height: 20%; background: #cbd5e1;"></div>
+                  <span class="bar-label">Outdoor ($290)</span>
+                </div>
+              </div>
+
+              <!-- Donut and Texture Stats -->
+              <div class="chart-sub-split">
+                <div>
+                  <h4 style="font-size: 0.82rem; font-weight: 600; margin-bottom: 0.75rem;">My Furnished Rooms</h4>
+                  <div class="donut-visual-wrap">
+                    <div class="donut-chart">
+                      <div class="donut-inner"></div>
+                    </div>
+                    <ul class="donut-legend">
+                      <li class="legend-item"><span class="legend-dot" style="background: var(--accent-cyan);"></span> Living Room (68%)</li>
+                      <li class="legend-item"><span class="legend-dot" style="background: var(--accent-blue);"></span> Dining & Lounge (32%)</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 style="font-size: 0.82rem; font-weight: 600; margin-bottom: 0.75rem;">Favorite Materials & Textures</h4>
+                  <div class="freq-list">
+                    <div class="freq-item">
+                      <span class="freq-name">Emerald Velvet</span>
+                      <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width: 92%;"></div></div>
+                      <span class="freq-pct">92%</span>
+                    </div>
+                    <div class="freq-item">
+                      <span class="freq-name">Solid White Oak</span>
+                      <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width: 74%; background: var(--accent-blue);"></div></div>
+                      <span class="freq-pct">74%</span>
+                    </div>
+                    <div class="freq-item">
+                      <span class="freq-name">Honed Carrara Marble</span>
+                      <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width: 58%;"></div></div>
+                      <span class="freq-pct">58%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Customer Interior Designers -->
+            <div class="vendors-card">
+              <h2 class="chart-title">Personal Design Stylists</h2>
+              <p class="text-muted" style="font-size: 0.78rem;">Assigned architectural spatial planners</p>
+              <div class="vendor-list">
+                <div class="vendor-item">
+                  <div class="vendor-profile">
+                    <div class="vendor-avatar">AL</div>
+                    <div>
+                      <div class="vendor-name">Astrid Lind</div>
+                      <div class="vendor-role">Lead Spatial Architect</div>
+                    </div>
+                  </div>
+                  <button type="button" onclick="window.location.href='404.html'" class="vendor-action-btn" title="Contact Stylist"><i class="fas fa-comment-dots"></i></button>
+                </div>
+                <div class="vendor-item">
+                  <div class="vendor-profile">
+                    <div class="vendor-avatar">GR</div>
+                    <div>
+                      <div class="vendor-name">Giovanni Rossi</div>
+                      <div class="vendor-role">Timber & Materials Stylist</div>
+                    </div>
+                  </div>
+                  <button type="button" onclick="window.location.href='404.html'" class="vendor-action-btn" title="Contact Stylist"><i class="fas fa-comment-dots"></i></button>
+                </div>
+                <div class="vendor-item">
+                  <div class="vendor-profile">
+                    <div class="vendor-avatar">EM</div>
+                    <div>
+                      <div class="vendor-name">Elena Moreau</div>
+                      <div class="vendor-role">Lighting & Textures</div>
+                    </div>
+                  </div>
+                  <button type="button" onclick="window.location.href='404.html'" class="vendor-action-btn" title="Contact Stylist"><i class="fas fa-comment-dots"></i></button>
+                </div>
+                <div class="vendor-item">
+                  <div class="vendor-profile">
+                    <div class="vendor-avatar">TK</div>
+                    <div>
+                      <div class="vendor-name">Takumi Kato</div>
+                      <div class="vendor-role">Joinery Consultant</div>
+                    </div>
+                  </div>
+                  <button type="button" onclick="window.location.href='404.html'" class="vendor-action-btn" title="Contact Stylist"><i class="fas fa-comment-dots"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Customer Curated Furniture Recommendations -->
+          <section class="deals-section">
+            <h2 class="deals-title">Handcrafted Pieces Curated For Your Home</h2>
+            <div class="row g-4">
+              <div class="col-lg-6">
+                <div class="deal-card">
+                  <div class="deal-img-wrap">
+                    <img src="assets/images/furniture-prod-aurelia.webp" alt="Aurelia Velvet Sofa" loading="lazy" />
+                  </div>
+                  <div>
+                    <span class="deal-badge">Living Collection</span>
+                    <h3 class="deal-name">Aurelia Velvet 3-Seater Sofa</h3>
+                    <p class="deal-sub">Matching your Emerald Living Room palette</p>
+                    <div class="deal-price">$2,450.00 <span style="font-size:0.8rem;color:var(--text-muted);">(Member Price)</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="deal-card">
+                  <div class="deal-img-wrap">
+                    <img src="assets/images/furniture-prod-kyoto-bed.webp" alt="Kyoto Teak Bed Frame" loading="lazy" />
+                  </div>
+                  <div>
+                    <span class="deal-badge" style="background:#e0f2fe;color:#0369a1;">Master Bedroom</span>
+                    <h3 class="deal-name">Kyoto Solid Teak Bed Frame</h3>
+                    <p class="deal-sub">Hand-mortised Japanese joinery standard</p>
+                    <div class="deal-price">$3,250.00 <span style="font-size:0.8rem;color:var(--text-muted);">(In Stock: 3 Left)</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- === ADMIN DASHBOARD VIEW === -->
+        <div id="viewAdminDashboard" class="d-none">
+          <div class="dashboard-grid">
+            <!-- Admin Store Metrics -->
+            <div class="metrics-col">
+              <div class="metric-card">
+                <div class="metric-title"><i class="fas fa-chart-line me-1" style="color:var(--accent-cyan)"></i> Monthly Store Revenue</div>
+                <h2 class="metric-value">$148,250.00</h2>
+                <div style="font-size:0.75rem; color:#166534; font-weight:600; margin-top:0.25rem;">&uarr; 18.4% vs last month</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-title"><i class="fas fa-tree me-1" style="color:var(--accent-cyan)"></i> Timber & Crafting Cost</div>
+                <h2 class="metric-value">$54,800.00</h2>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.25rem;">Gross Margin: 63.0%</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-title"><i class="fas fa-shopping-bag me-1" style="color:var(--accent-cyan)"></i> Total Orders Placed</div>
+                <h2 class="metric-value">184 Pieces</h2>
+                <div style="font-size:0.75rem; color:#166534; font-weight:600; margin-top:0.25rem;">Avg Ticket: $805.70</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-title"><i class="fas fa-clock me-1" style="color:var(--accent-cyan)"></i> Pending Atelier Dispatches</div>
+                <h2 class="metric-value" style="color: #92400e;">12 Orders</h2>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.25rem;">Fulfillment: 98.4% On Time</div>
+              </div>
+            </div>
+
+            <!-- Admin Store Revenue Chart -->
+            <div class="chart-card">
+              <div class="chart-header">
+                <div>
+                  <h2 class="chart-title">Store Revenue Trajectory</h2>
+                  <p class="text-muted mb-0" style="font-size: 0.8rem;">Monthly gross sales across all furniture collections</p>
+                </div>
+                <div class="chart-filters">
+                  <button type="button" onclick="window.location.href='404.html'" class="chart-filter-btn active">Annual</button>
+                  <button type="button" onclick="window.location.href='404.html'" class="chart-filter-btn">Q3 2026</button>
+                  <button type="button" onclick="window.location.href='404.html'" class="chart-filter-btn">Last Month</button>
+                  <button type="button" onclick="window.location.href='404.html'" class="chart-filter-btn">7 Days</button>
+                </div>
+              </div>
+
+              <!-- Bar visual -->
+              <div class="chart-bars-wrap">
+                <div class="bar-col">
+                  <div class="bar-fill" style="height: 52%; background: #cbd5e1;"></div>
+                  <span class="bar-label">May ($84k)</span>
+                </div>
+                <div class="bar-col">
+                  <div class="bar-fill" style="height: 64%; background: #cbd5e1;"></div>
+                  <span class="bar-label">Jun ($98k)</span>
+                </div>
+                <div class="bar-col">
+                  <div class="bar-fill" style="height: 72%;"></div>
+                  <span class="bar-label">Jul ($112k)</span>
+                </div>
+                <div class="bar-col">
+                  <div class="bar-fill" style="height: 80%; background: var(--accent-blue);"></div>
+                  <span class="bar-label">Aug ($126k)</span>
+                </div>
+                <div class="bar-col">
+                  <div class="bar-fill" style="height: 89%;"></div>
+                  <span class="bar-label">Sep ($139k)</span>
+                </div>
+                <div class="bar-col">
+                  <div class="bar-fill" style="height: 96%; background: linear-gradient(180deg, var(--accent-cyan) 0%, #166534 100%);"></div>
+                  <span class="bar-label">Oct ($148k)</span>
+                </div>
+              </div>
+
+              <!-- Donut and Frequency Breakdown -->
+              <div class="chart-sub-split">
+                <div>
+                  <h4 style="font-size: 0.82rem; font-weight: 600; margin-bottom: 0.75rem;">Revenue by Furniture Category</h4>
+                  <div class="donut-visual-wrap">
+                    <div class="donut-chart" style="background: conic-gradient(var(--accent-cyan) 0% 45%, var(--accent-blue) 45% 77%, #cbd5e1 77% 100%);">
+                      <div class="donut-inner"></div>
+                    </div>
+                    <ul class="donut-legend">
+                      <li class="legend-item"><span class="legend-dot" style="background: var(--accent-cyan);"></span> Sofas & Lounges (45%)</li>
+                      <li class="legend-item"><span class="legend-dot" style="background: var(--accent-blue);"></span> Teak Bedroom (32%)</li>
+                      <li class="legend-item"><span class="legend-dot" style="background: #cbd5e1;"></span> Dining Sets (23%)</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 style="font-size: 0.82rem; font-weight: 600; margin-bottom: 0.75rem;">Fast-Moving Furniture Pieces</h4>
+                  <div class="freq-list">
+                    <div class="freq-item">
+                      <span class="freq-name">Aurelia Velvet Sofa</span>
+                      <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width: 94%;"></div></div>
+                      <span class="freq-pct">42 Sold</span>
+                    </div>
+                    <div class="freq-item">
+                      <span class="freq-name">Carrara Marble Table</span>
+                      <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width: 78%; background: var(--accent-blue);"></div></div>
+                      <span class="freq-pct">31 Sold</span>
+                    </div>
+                    <div class="freq-item">
+                      <span class="freq-name">Nordic Lounge Chair</span>
+                      <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width: 65%;"></div></div>
+                      <span class="freq-pct">26 Sold</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Admin Supply Guilds -->
+            <div class="vendors-card">
+              <h2 class="chart-title">Supply & Timber Guilds</h2>
+              <p class="text-muted" style="font-size: 0.78rem;">Verified workshop production partners</p>
+              <div class="vendor-list">
+                <div class="vendor-item">
+                  <div class="vendor-profile">
+                    <div class="vendor-avatar">CG</div>
+                    <div>
+                      <div class="vendor-name">Copenhagen Guild</div>
+                      <div class="vendor-role">FSC White Oak Timber</div>
+                    </div>
+                  </div>
+                  <button type="button" onclick="window.location.href='404.html'" class="vendor-action-btn" title="View Guild"><i class="fas fa-external-link-alt"></i></button>
+                </div>
+                <div class="vendor-item">
+                  <div class="vendor-profile">
+                    <div class="vendor-avatar">TT</div>
+                    <div>
+                      <div class="vendor-name">Tuscany Tannery</div>
+                      <div class="vendor-role">Full-Grain Leather</div>
+                    </div>
+                  </div>
+                  <button type="button" onclick="window.location.href='404.html'" class="vendor-action-btn" title="View Guild"><i class="fas fa-external-link-alt"></i></button>
+                </div>
+                <div class="vendor-item">
+                  <div class="vendor-profile">
+                    <div class="vendor-avatar">KJ</div>
+                    <div>
+                      <div class="vendor-name">Kyoto Joinery</div>
+                      <div class="vendor-role">Teak Bed Artistry</div>
+                    </div>
+                  </div>
+                  <button type="button" onclick="window.location.href='404.html'" class="vendor-action-btn" title="View Guild"><i class="fas fa-external-link-alt"></i></button>
+                </div>
+                <div class="vendor-item">
+                  <div class="vendor-profile">
+                    <div class="vendor-avatar">CS</div>
+                    <div>
+                      <div class="vendor-name">Carrara Quarries</div>
+                      <div class="vendor-role">Marble Slabs</div>
+                    </div>
+                  </div>
+                  <button type="button" onclick="window.location.href='404.html'" class="vendor-action-btn" title="View Guild"><i class="fas fa-external-link-alt"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Admin Seasonal Campaigns -->
+          <section class="deals-section">
+            <h2 class="deals-title">Active Atelier Marketing Campaigns</h2>
+            <div class="row g-4">
+              <div class="col-lg-6">
+                <div class="deal-card">
+                  <div class="deal-img-wrap">
+                    <img src="assets/images/furniture-prod-aurelia.webp" alt="Penthouse Living Campaign" loading="lazy" />
+                  </div>
+                  <div>
+                    <span class="deal-badge" style="background:#dcfce7;color:#166534;">High Performer</span>
+                    <h3 class="deal-name">Architectural Penthouse Living Suite</h3>
+                    <p class="deal-sub">Total Campaign Revenue Generated: $68,400.00</p>
+                    <div class="deal-price">24 Conversions <span style="font-size:0.8rem;color:var(--text-muted);">(ROI: 4.2x)</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="deal-card">
+                  <div class="deal-img-wrap">
+                    <img src="assets/images/furniture-table-dining.webp" alt="Nordic Artisan Dining Campaign" loading="lazy" />
+                  </div>
+                  <div>
+                    <span class="deal-badge" style="background:#e0f2fe;color:#0369a1;">Trending</span>
+                    <h3 class="deal-name">Nordic Artisan Dining Campaign</h3>
+                    <p class="deal-sub">Total Campaign Revenue Generated: $42,150.00</p>
+                    <div class="deal-price">18 Conversions <span style="font-size:0.8rem;color:var(--text-muted);">(ROI: 3.6x)</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- ===== 2. FURNITURE TAB PANEL ===== -->
+      <div id="panel-furniture" class="tab-panel d-none">
+        <!-- CUSTOMER VIEW: Browse Furniture Catalog -->
+        <div id="customerFurnitureView">
+          <div class="dash-card">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom flex-wrap gap-3">
+              <div>
+                <h3 class="dash-title" style="margin:0;"><i class="fas fa-couch me-2" style="color: var(--accent-cyan);"></i> Browse Signature Furniture Catalog</h3>
+                <p class="text-muted mb-0" style="font-size: 0.85rem;">Heirloom-grade furniture handcrafted from certified sustainable timber</p>
+              </div>
+              <div class="d-flex gap-2 flex-wrap">
+                <button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-outline-dark active" style="border-radius:99px;">All Pieces (5)</button>
+                <button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-outline-dark" style="border-radius:99px;">Living Room</button>
+                <button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-outline-dark" style="border-radius:99px;">Bedroom</button>
+                <button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-outline-dark" style="border-radius:99px;">Dining</button>
+              </div>
+            </div>
+            
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead>
+                  <tr style="border-bottom: 2px solid rgba(0,0,0,0.06); font-size: 0.85rem; color: var(--text-muted);">
+                    <th>Piece</th>
+                    <th>Name & Description</th>
+                    <th>Category</th>
+                    <th>Craftsmanship & Timber</th>
+                    <th>Member Price</th>
+                    <th>Stock Status</th>
+                    <th class="text-end">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><img src="assets/images/furniture-prod-aurelia.webp" alt="Aurelia Velvet Sofa" style="width: 58px; height: 58px; object-fit: cover; border-radius: 8px;" /></td>
+                    <td>
+                      <strong>Aurelia Velvet Sofa</strong>
+                      <div class="text-muted" style="font-size:0.75rem;">3-Seater Minimalist Architectural Frame</div>
+                    </td>
+                    <td>Living Room</td>
+                    <td>European White Oak, Emerald Velvet</td>
+                    <td><strong style="color:var(--text-main); font-size:1.05rem;">$2,450.00</strong></td>
+                    <td><span class="badge bg-success">In Stock (12)</span></td>
+                    <td class="text-end"><button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-outline-dark"><i class="fas fa-shopping-bag me-1"></i> Order Piece</button></td>
+                  </tr>
+                  <tr>
+                    <td><img src="assets/images/furniture-prod-nordic.webp" alt="Nordic Lounge Chair" style="width: 58px; height: 58px; object-fit: cover; border-radius: 8px;" /></td>
+                    <td>
+                      <strong>Nordic Lounge Armchair</strong>
+                      <div class="text-muted" style="font-size:0.75rem;">Ergonomic 105° Recline Angle</div>
+                    </td>
+                    <td>Chairs & Armchairs</td>
+                    <td>Solid White Oak, Natural Linen</td>
+                    <td><strong style="color:var(--text-main); font-size:1.05rem;">$890.00</strong></td>
+                    <td><span class="badge bg-success">In Stock (8)</span></td>
+                    <td class="text-end"><button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-outline-dark"><i class="fas fa-shopping-bag me-1"></i> Order Piece</button></td>
+                  </tr>
+                  <tr>
+                    <td><img src="assets/images/furniture-prod-kyoto-bed.webp" alt="Kyoto Teak Bed Frame" style="width: 58px; height: 58px; object-fit: cover; border-radius: 8px;" /></td>
+                    <td>
+                      <strong>Kyoto Solid Teak Bed Frame</strong>
+                      <div class="text-muted" style="font-size:0.75rem;">Japanese Mortise & Tenon Headboard</div>
+                    </td>
+                    <td>Bedroom Suite</td>
+                    <td>Kiln-Dried Solid Teak, Plant Wax</td>
+                    <td><strong style="color:var(--text-main); font-size:1.05rem;">$3,250.00</strong></td>
+                    <td><span class="badge bg-warning text-dark">Low Stock (3)</span></td>
+                    <td class="text-end"><button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-outline-dark"><i class="fas fa-shopping-bag me-1"></i> Order Piece</button></td>
+                  </tr>
+                  <tr>
+                    <td><img src="assets/images/furniture-prod-marble-table.webp" alt="Carrara Marble Coffee Table" style="width: 58px; height: 58px; object-fit: cover; border-radius: 8px;" /></td>
+                    <td>
+                      <strong>Carrara Marble Coffee Table</strong>
+                      <div class="text-muted" style="font-size:0.75rem;">Honed Italian Marble Slab & Brushed Brass</div>
+                    </td>
+                    <td>Tables & Consoles</td>
+                    <td>Italian Carrara Marble, Solid Brass</td>
+                    <td><strong style="color:var(--text-main); font-size:1.05rem;">$1,150.00</strong></td>
+                    <td><span class="badge bg-success">In Stock (15)</span></td>
+                    <td class="text-end"><button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-outline-dark"><i class="fas fa-shopping-bag me-1"></i> Order Piece</button></td>
+                  </tr>
+                  <tr>
+                    <td><img src="assets/images/furniture-table-dining.webp" alt="Artisan Walnut Dining Table" style="width: 58px; height: 58px; object-fit: cover; border-radius: 8px;" /></td>
+                    <td>
+                      <strong>Artisan Walnut Dining Table</strong>
+                      <div class="text-muted" style="font-size:0.75rem;">8-Seater Master Hand-Jointed Timber Table</div>
+                    </td>
+                    <td>Dining & Kitchen</td>
+                    <td>American Black Walnut, Organic Oil</td>
+                    <td><strong style="color:var(--text-main); font-size:1.05rem;">$1,850.00</strong></td>
+                    <td><span class="badge bg-success">In Stock (6)</span></td>
+                    <td class="text-end"><button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-outline-dark"><i class="fas fa-shopping-bag me-1"></i> Order Piece</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ADMIN VIEW: Atelier Inventory Management -->
+        <div id="adminFurnitureView" class="d-none">
+          <div class="dash-card">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom flex-wrap gap-3">
+              <div>
+                <h3 class="dash-title" style="margin:0;"><i class="fas fa-couch me-2" style="color: var(--accent-cyan);"></i> Atelier Inventory & Catalog Management</h3>
+                <p class="text-muted mb-0" style="font-size: 0.85rem;">Manage warehouse units, timber costs, margins, and catalog availability</p>
+              </div>
+              <div class="d-flex gap-2 flex-wrap">
+                <button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-outline-dark"><i class="fas fa-download me-1"></i> Export Inventory CSV</button>
+                <button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-dark" style="background:#1a1714;"><i class="fas fa-plus me-1"></i> Add New Furniture Piece</button>
+              </div>
+            </div>
+            
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead>
+                  <tr style="border-bottom: 2px solid rgba(0,0,0,0.06); font-size: 0.85rem; color: var(--text-muted);">
+                    <th>SKU</th>
+                    <th>Thumbnail</th>
+                    <th>Piece Name</th>
+                    <th>Category</th>
+                    <th>Timber / Material</th>
+                    <th>Unit Cost</th>
+                    <th>Retail Price</th>
+                    <th>Stock Units</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>FUR-001</code></td>
+                    <td><img src="assets/images/furniture-prod-aurelia.webp" alt="Sofa" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;" /></td>
+                    <td><strong>Aurelia Velvet Sofa</strong></td>
+                    <td>Living Room</td>
+                    <td>Oak / Emerald Velvet</td>
+                    <td>$1,100.00</td>
+                    <td>$2,450.00</td>
+                    <td><span class="badge bg-success">12 Units</span></td>
+                    <td class="text-end">
+                      <button type="button" onclick="window.location.href='404.html'" class="btn btn-outline-dark btn-sm me-1" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button type="button" onclick="window.location.href='404.html'" class="btn btn-outline-danger btn-sm" title="Delete"><i class="fas fa-trash"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><code>FUR-002</code></td>
+                    <td><img src="assets/images/furniture-prod-nordic.webp" alt="Chair" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;" /></td>
+                    <td><strong>Nordic Lounge Armchair</strong></td>
+                    <td>Armchairs</td>
+                    <td>White Oak / Linen</td>
+                    <td>$380.00</td>
+                    <td>$890.00</td>
+                    <td><span class="badge bg-success">8 Units</span></td>
+                    <td class="text-end">
+                      <button type="button" onclick="window.location.href='404.html'" class="btn btn-outline-dark btn-sm me-1" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button type="button" onclick="window.location.href='404.html'" class="btn btn-outline-danger btn-sm" title="Delete"><i class="fas fa-trash"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><code>FUR-003</code></td>
+                    <td><img src="assets/images/furniture-prod-kyoto-bed.webp" alt="Bed" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;" /></td>
+                    <td><strong>Kyoto Solid Teak Bed Frame</strong></td>
+                    <td>Bedroom</td>
+                    <td>Kiln-Dried Solid Teak</td>
+                    <td>$1,400.00</td>
+                    <td>$3,250.00</td>
+                    <td><span class="badge bg-warning text-dark">3 Units (Low)</span></td>
+                    <td class="text-end">
+                      <button type="button" onclick="window.location.href='404.html'" class="btn btn-outline-dark btn-sm me-1" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button type="button" onclick="window.location.href='404.html'" class="btn btn-outline-danger btn-sm" title="Delete"><i class="fas fa-trash"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><code>FUR-004</code></td>
+                    <td><img src="assets/images/furniture-prod-marble-table.webp" alt="Table" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;" /></td>
+                    <td><strong>Carrara Marble Coffee Table</strong></td>
+                    <td>Tables</td>
+                    <td>Carrara Marble / Brass</td>
+                    <td>$520.00</td>
+                    <td>$1,150.00</td>
+                    <td><span class="badge bg-success">15 Units</span></td>
+                    <td class="text-end">
+                      <button type="button" onclick="window.location.href='404.html'" class="btn btn-outline-dark btn-sm me-1" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button type="button" onclick="window.location.href='404.html'" class="btn btn-outline-danger btn-sm" title="Delete"><i class="fas fa-trash"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><code>FUR-005</code></td>
+                    <td><img src="assets/images/furniture-table-dining.webp" alt="Table" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;" /></td>
+                    <td><strong>Artisan Walnut Dining Table</strong></td>
+                    <td>Dining</td>
+                    <td>American Black Walnut</td>
+                    <td>$820.00</td>
+                    <td>$1,850.00</td>
+                    <td><span class="badge bg-success">6 Units</span></td>
+                    <td class="text-end">
+                      <button type="button" onclick="window.location.href='404.html'" class="btn btn-outline-dark btn-sm me-1" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button type="button" onclick="window.location.href='404.html'" class="btn btn-outline-danger btn-sm" title="Delete"><i class="fas fa-trash"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 3. ORDERS TAB PANEL ===== -->
+      <div id="panel-orders" class="tab-panel d-none">
+        <!-- CUSTOMER VIEW: My Personal Furniture Orders -->
+        <div id="customerOrdersView">
+          <div class="dash-card">
+            <div class="mb-4 pb-3 border-bottom">
+              <h3 class="dash-title" style="margin:0;"><i class="fas fa-shopping-bag me-2" style="color: var(--accent-cyan);"></i> My Orders & White-Glove Delivery</h3>
+              <p class="text-muted mb-0" style="font-size: 0.85rem;">Track your custom orders, artisan workshop assembly, and scheduled delivery</p>
+            </div>
+
+            <!-- Active Order Highlight with 4-Step Visual Tracker -->
+            <div style="background: var(--surface-2); border: 1px solid rgba(194, 133, 82, 0.2); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 2rem;">
+              <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                <div>
+                  <span class="badge" style="background: var(--accent-cyan); color: #fff; font-size: 0.75rem;">ACTIVE SHIPMENT</span>
+                  <h4 style="margin: 0.5rem 0 0.2rem 0; font-size: 1.15rem;">Order #STK-8821 &bull; Kyoto Teak Bed Frame (King)</h4>
+                  <div class="text-muted" style="font-size: 0.8rem;">White-Glove Delivery by Dedicated Atelier Team</div>
+                </div>
+                <div class="text-end">
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">Estimated Room Installation:</div>
+                  <strong style="color: #166534; font-size: 1.05rem;">Wednesday, Oct 28 &bull; 10:00 AM - 1:00 PM</strong>
+                </div>
+              </div>
+
+              <!-- 4-Step Tracker -->
+              <div class="delivery-timeline">
+                <div class="timeline-step completed">
+                  <div class="timeline-dot"><i class="fas fa-check"></i></div>
+                  <div>
+                    <div class="timeline-label" style="font-size: 0.8rem; font-weight: 600;">Order Placed</div>
+                    <div class="timeline-date" style="font-size: 0.72rem; color: var(--text-muted);">Oct 18</div>
+                  </div>
+                </div>
+                <div class="timeline-step completed">
+                  <div class="timeline-dot"><i class="fas fa-check"></i></div>
+                  <div>
+                    <div class="timeline-label" style="font-size: 0.8rem; font-weight: 600;">Crafting at Workshop</div>
+                    <div class="timeline-date" style="font-size: 0.72rem; color: var(--text-muted);">Oct 21</div>
+                  </div>
+                </div>
+                <div class="timeline-step active">
+                  <div class="timeline-dot"><i class="fas fa-truck-fast"></i></div>
+                  <div>
+                    <div class="timeline-label" style="font-size: 0.8rem; font-weight: 600; color: var(--accent-dark);">In Transit</div>
+                    <div class="timeline-date" style="font-size: 0.72rem; color: var(--accent-dark);">Oct 26 (On Route)</div>
+                  </div>
+                </div>
+                <div class="timeline-step">
+                  <div class="timeline-dot"><i class="fas fa-couch"></i></div>
+                  <div>
+                    <div class="timeline-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">White-Glove Assembly</div>
+                    <div class="timeline-date" style="font-size: 0.72rem; color: var(--text-muted);">Oct 28 (Pending)</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Past Orders Table -->
+            <h4 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem;">Order History</h4>
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead>
+                  <tr style="border-bottom: 2px solid rgba(0,0,0,0.06); font-size: 0.85rem; color: var(--text-muted);">
+                    <th>Order #</th>
+                    <th>Date</th>
+                    <th>Furniture Piece</th>
+                    <th>Amount</th>
+                    <th>Delivery Status</th>
+                    <th class="text-end">Documents</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>#STK-8821</strong></td>
+                    <td>Oct 18, 2026</td>
+                    <td>Kyoto Solid Teak Bed Frame (King)</td>
+                    <td><strong>$3,250.00</strong></td>
+                    <td><span class="status-badge status-processing">In Transit</span></td>
+                    <td class="text-end"><button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-outline-dark"><i class="fas fa-file-invoice me-1"></i> Order Receipt</button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>#STK-7319</strong></td>
+                    <td>Aug 14, 2026</td>
+                    <td>Aurelia Velvet Sofa (3-Seater)</td>
+                    <td><strong>$2,450.00</strong></td>
+                    <td><span class="status-badge status-delivered">Delivered & Assembled</span></td>
+                    <td class="text-end"><button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-outline-dark"><i class="fas fa-shield-alt me-1"></i> 10-Yr Warranty PDF</button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>#STK-6102</strong></td>
+                    <td>May 02, 2026</td>
+                    <td>Carrara Marble Coffee Table</td>
+                    <td><strong>$1,150.00</strong></td>
+                    <td><span class="status-badge status-delivered">Delivered</span></td>
+                    <td class="text-end"><button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-outline-dark"><i class="fas fa-file-invoice me-1"></i> Invoice</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ADMIN VIEW: All Store Orders Queue -->
+        <div id="adminOrdersView" class="d-none">
+          <div class="dash-card">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom flex-wrap gap-3">
+              <div>
+                <h3 class="dash-title" style="margin:0;"><i class="fas fa-clipboard-list me-2" style="color: var(--accent-cyan);"></i> Store Orders & White-Glove Dispatch Queue</h3>
+                <p class="text-muted mb-0" style="font-size: 0.85rem;">Manage ongoing customer fulfillment, delivery carriers, and dispatch routes</p>
+              </div>
+              <div class="d-flex gap-2 flex-wrap">
+                <button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-outline-dark"><i class="fas fa-route me-1"></i> Carrier Routes</button>
+                <button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-dark" style="background:#1a1714;"><i class="fas fa-box me-1"></i> Dispatch Batch</button>
+              </div>
+            </div>
+            
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead>
+                  <tr style="border-bottom: 2px solid rgba(0,0,0,0.06); font-size: 0.85rem; color: var(--text-muted);">
+                    <th>Order ID</th>
+                    <th>Customer Client</th>
+                    <th>Furniture Items</th>
+                    <th>Total Value</th>
+                    <th>Logistics Partner</th>
+                    <th>Fulfillment Status</th>
+                    <th class="text-end">Manage</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>#STK-9420</strong></td>
+                    <td>Kathryn Murphy (NYC)</td>
+                    <td>Aurelia Velvet Sofa (Emerald)</td>
+                    <td>$2,450.00</td>
+                    <td>Metro White-Glove Logistics</td>
+                    <td><span class="status-badge status-processing">In Transit</span></td>
+                    <td class="text-end"><button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-outline-dark">Track Route</button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>#STK-9419</strong></td>
+                    <td>Julian Vance (London)</td>
+                    <td>Kyoto Teak King Bed + 2 Nightstands</td>
+                    <td>$4,650.00</td>
+                    <td>Dedicated Atelier Freight</td>
+                    <td><span class="status-badge" style="background:#e0f2fe;color:#0369a1;">Ready for Dispatch</span></td>
+                    <td class="text-end"><button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-outline-dark">Assign Driver</button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>#STK-9418</strong></td>
+                    <td>Jenny Wilson (Paris)</td>
+                    <td>Nordic Lounge Chair (Oak)</td>
+                    <td>$890.00</td>
+                    <td>Express Furniture Logistics</td>
+                    <td><span class="status-badge status-delivered">Delivered & Assembled</span></td>
+                    <td class="text-end"><button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-outline-dark">Signed POD</button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>#STK-9417</strong></td>
+                    <td>Dianne Russell (Milan)</td>
+                    <td>Carrara Marble Coffee Table</td>
+                    <td>$1,150.00</td>
+                    <td>White-Glove Team B</td>
+                    <td><span class="status-badge" style="background:#fef3c7;color:#92400e;">Workshop Assembly</span></td>
+                    <td class="text-end"><button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-outline-dark">View Details</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 4. CUSTOMERS PANEL (ADMIN ONLY) ===== -->
+      <div id="panel-customers" class="tab-panel d-none">
+        <div class="dash-card">
+          <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom flex-wrap gap-3">
+            <div>
+              <h3 class="dash-title" style="margin:0;"><i class="fas fa-users me-2" style="color: var(--accent-cyan);"></i> Client Directory & VIP Trade Accounts</h3>
+              <p class="text-muted mb-0" style="font-size: 0.85rem;">Registered luxury homeowners and commercial interior architecture studios</p>
+            </div>
+            <button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-dark" style="background:#1a1714;"><i class="fas fa-user-plus me-1"></i> Add VIP Client</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead>
+                <tr style="border-bottom: 2px solid rgba(0,0,0,0.06); font-size: 0.85rem; color: var(--text-muted);">
+                  <th>Client Name</th>
+                  <th>Contact Email</th>
+                  <th>Account Type</th>
+                  <th>Total Invested</th>
+                  <th>Orders</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Kathryn Murphy</strong></td>
+                  <td>kathryn.m@example.com</td>
+                  <td><span class="badge" style="background:var(--accent-soft);color:var(--accent-dark);">VIP Homeowner</span></td>
+                  <td>$12,450.00</td>
+                  <td>4 Orders</td>
+                  <td><span class="badge bg-success">Active VIP</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Lord Julian Vance</strong></td>
+                  <td>j.vance@studio-vance.co.uk</td>
+                  <td><span class="badge" style="background:#e0f2fe;color:#0369a1;">Trade Architect</span></td>
+                  <td>$28,900.00</td>
+                  <td>8 Orders</td>
+                  <td><span class="badge bg-success">Active Trade</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Jenny Wilson</strong></td>
+                  <td>jenny.w@example.com</td>
+                  <td><span class="badge" style="background:var(--accent-soft);color:var(--accent-dark);">Homeowner</span></td>
+                  <td>$9,553.00</td>
+                  <td>3 Orders</td>
+                  <td><span class="badge bg-success">Active</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Dianne Russell</strong></td>
+                  <td>dianne.r@architects.org</td>
+                  <td><span class="badge" style="background:#e0f2fe;color:#0369a1;">Commercial Designer</span></td>
+                  <td>$18,400.00</td>
+                  <td>5 Orders</td>
+                  <td><span class="badge bg-success">Active Trade</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 5. CONSULTATIONS PANEL (CUSTOMER ONLY) ===== -->
+      <div id="panel-consultations" class="tab-panel d-none">
+        <div class="dash-card">
+          <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom flex-wrap gap-3">
+            <div>
+              <h3 class="dash-title" style="margin:0;"><i class="fas fa-calendar-check me-2" style="color: var(--accent-cyan);"></i> My Interior Design Consultations</h3>
+              <p class="text-muted mb-0" style="font-size: 0.85rem;">Complimentary 1-on-1 walkthroughs with our architectural design stylists</p>
+            </div>
+            <button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-dark" style="background:#1a1714;"><i class="fas fa-plus me-1"></i> Book New Walkthrough</button>
+          </div>
+
+          <div class="row g-4">
+            <div class="col-lg-6">
+              <div style="background: #fdfaf6; border: 1px solid rgba(194,133,82,0.3); border-radius: var(--radius-md); padding: 1.5rem;">
+                <span class="deal-badge" style="background:#dcfce7;color:#166534;">Upcoming Appointment</span>
+                <h4 style="margin: 0.5rem 0;">Spatial Living Consultation with Astrid Lind</h4>
+                <p class="text-muted" style="font-size:0.85rem; margin-bottom: 1rem;"><i class="fas fa-calendar me-2" style="color:var(--accent-cyan)"></i><strong>Friday, Nov 2, 2026 at 2:00 PM (45 Min)</strong></p>
+                <p style="font-size:0.88rem; color:var(--text-main);">Topic: <em>Master Bedroom Teak Layout & Belgian Linen Palette Planning</em></p>
+                <div class="d-flex gap-2 mt-3 flex-wrap">
+                  <button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-outline-dark"><i class="fas fa-video me-1"></i> Join 3D Virtual Room</button>
+                  <button type="button" onclick="window.location.href='404.html'" class="btn btn-sm btn-outline-danger">Reschedule</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div style="background: var(--surface-2); border: 1px solid rgba(0,0,0,0.05); border-radius: var(--radius-md); padding: 1.5rem;">
+                <h5 style="margin-bottom:0.5rem;">Complimentary Fabric Swatch Box</h5>
+                <p class="text-muted" style="font-size:0.85rem;">Ordered: Belgian Bouclé, Emerald Velvet, Cognac Full-Grain Aniline Leather, Natural Teak Wood Grain sample blocks.</p>
+                <div class="d-flex align-items-center gap-2 mt-3 flex-wrap">
+                  <span class="status-badge status-delivered">Delivered to Address</span>
+                  <a href="404.html" class="btn btn-sm btn-link p-0 text-dark">Order Additional Swatches &rarr;</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 6. REPORTS PANEL (ADMIN ONLY) ===== -->
+      <div id="panel-reports" class="tab-panel d-none">
+        <div class="dash-card">
+          <div class="mb-4 pb-2 border-bottom">
+            <h3 class="dash-title" style="margin:0;"><i class="fas fa-chart-bar me-2" style="color: var(--accent-cyan);"></i> Financial & Workshop Performance Analytics</h3>
+            <p class="text-muted" style="font-size: 0.85rem;">Store revenue, workshop gross margins, and white-glove logistics reliability</p>
+          </div>
+          <div class="row g-4 mb-4">
+            <div class="col-md-4">
+              <div style="background: var(--accent-soft); border: 1px solid rgba(194, 133, 82, 0.25); padding: 1.5rem; border-radius: var(--radius-md);">
+                <h5>Yearly Gross Revenue</h5>
+                <h3 style="font-family:'Playfair Display',serif;font-weight:700;margin:0.5rem 0;">$284,500.00</h3>
+                <p class="text-muted" style="font-size:0.8rem;margin:0;">Target: $320,000 (88.9% achieved)</p>
+                <div class="progress mt-2" style="height: 8px;">
+                  <div class="progress-bar" style="width: 89%; background-color: var(--accent-cyan);"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div style="background: #f7f4ef; border: 1px solid rgba(0,0,0,0.06); padding: 1.5rem; border-radius: var(--radius-md);">
+                <h5>White-Glove Fulfillment Rate</h5>
+                <h3 style="font-family:'Playfair Display',serif;font-weight:700;margin:0.5rem 0;">98.4%</h3>
+                <p class="text-muted" style="font-size:0.8rem;margin:0;">On-time room assembly & packaging removal</p>
+                <div class="progress mt-2" style="height: 8px;">
+                  <div class="progress-bar" style="width: 98%; background-color: #166534;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div style="background: #f7f4ef; border: 1px solid rgba(0,0,0,0.06); padding: 1.5rem; border-radius: var(--radius-md);">
+                <h5>Sustainable Timber Index</h5>
+                <h3 style="font-family:'Playfair Display',serif;font-weight:700;margin:0.5rem 0;">100% FSC</h3>
+                <p class="text-muted" style="font-size:0.8rem;margin:0;">Certified responsibly harvested teak & oak</p>
+                <div class="progress mt-2" style="height: 8px;">
+                  <div class="progress-bar" style="width: 100%; background-color: var(--accent-blue);"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 7. SETTINGS PANEL ===== -->
+      <div id="panel-setting" class="tab-panel d-none">
+        <div class="dash-card">
+          <div class="mb-4 pb-2 border-bottom">
+            <h3 class="dash-title" style="margin:0;"><i class="fas fa-cog me-2" style="color: var(--accent-cyan);"></i> Profile & Security Settings</h3>
+            <p class="text-muted" style="font-size: 0.85rem;">Manage your login credentials and personal atelier preferences</p>
+          </div>
+          <form style="max-width: 550px;" id="settingForm">
+            <div class="mb-3">
+              <label class="form-label" style="font-size:0.85rem; font-weight:600;">Full Name</label>
+              <input type="text" class="form-control" id="settingsName" value="Sarah Miller" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" style="font-size:0.85rem; font-weight:600;">Email Address</label>
+              <input type="email" class="form-control" id="settingsEmail" value="sarah.m@example.com" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" style="font-size:0.85rem; font-weight:600;">Update Password</label>
+              <input type="password" class="form-control" placeholder="Enter new password" />
+            </div>
+            <button type="submit" class="btn btn-dark" style="background:#1a1714;">Save Settings</button>
+          </form>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      let email = localStorage.getItem('lumisUserEmail') || 'sarah.m@example.com';
+      let role = localStorage.getItem('lumisUserRole') || 'customer';
+
+      const dashTitle = document.getElementById('dashTitle');
+      const currentSectionLabel = document.getElementById('currentSectionLabel');
+
+      const roleBtnsCustomer = document.querySelectorAll('.roleBtnCustomer, #roleBtnCustomer');
+      const roleBtnsAdmin = document.querySelectorAll('.roleBtnAdmin, #roleBtnAdmin');
+      const userProfileRoles = document.querySelectorAll('.userProfileRole, #userProfileRole');
+      const userProfileNames = document.querySelectorAll('.userProfileName, #userProfileName');
+      const userProfileEmails = document.querySelectorAll('.userProfileEmail, #userProfileEmail');
+      const avatarInitials = document.querySelectorAll('.avatarInitial, #avatarInitial');
+
+      // Dynamic padding-top adjust for fixed header on mobile
+      function adjustMobileHeaderSpacing() {
+        const topBar = document.getElementById('dashboardTopBar');
+        const mainContent = document.querySelector('.main-content');
+        if (topBar && mainContent) {
+          if (window.innerWidth <= 992) {
+            const h = topBar.offsetHeight;
+            mainContent.style.paddingTop = (h + 16) + 'px';
+          } else {
+            mainContent.style.paddingTop = '';
+          }
+        }
+      }
+
+      window.addEventListener('resize', adjustMobileHeaderSpacing);
+      window.addEventListener('orientationchange', adjustMobileHeaderSpacing);
+      adjustMobileHeaderSpacing();
+
+      const customerSidebarNav = document.getElementById('customerSidebarNav');
+      const adminSidebarNav = document.getElementById('adminSidebarNav');
+
+      const viewCustomerDashboard = document.getElementById('viewCustomerDashboard');
+      const viewAdminDashboard = document.getElementById('viewAdminDashboard');
+
+      const customerFurnitureView = document.getElementById('customerFurnitureView');
+      const adminFurnitureView = document.getElementById('adminFurnitureView');
+
+      const customerOrdersView = document.getElementById('customerOrdersView');
+      const adminOrdersView = document.getElementById('adminOrdersView');
+
+      const sidebar = document.getElementById('sidebar');
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+      const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+
+      // Function to open/close mobile sidebar
+      function openSidebar() {
+        if (sidebar) sidebar.classList.add('open');
+        if (sidebarBackdrop) sidebarBackdrop.classList.add('show');
+      }
+
+      function closeSidebar() {
+        if (sidebar) sidebar.classList.remove('open');
+        if (sidebarBackdrop) sidebarBackdrop.classList.remove('show');
+      }
+
+      if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openSidebar();
+        });
+      }
+
+      if (sidebarCloseBtn) {
+        sidebarCloseBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          closeSidebar();
+        });
+      }
+
+      if (sidebarBackdrop) {
+        sidebarBackdrop.addEventListener('click', () => {
+          closeSidebar();
+        });
+      }
+
+      // Function to switch between Customer and Admin role dashboards
+      function applyRole(targetRole) {
+        role = targetRole;
+        localStorage.setItem('lumisUserRole', role);
+
+        if (role === 'admin') {
+          // Admin View State
+          roleBtnsAdmin.forEach(btn => {
+            btn.classList.add('active');
+            btn.style.background = 'var(--accent-cyan)';
+            btn.style.color = '#ffffff';
+          });
+          roleBtnsCustomer.forEach(btn => {
+            btn.classList.remove('active');
+            btn.style.background = 'transparent';
+            btn.style.color = 'var(--text-muted)';
+          });
+
+          userProfileRoles.forEach(el => el.textContent = 'ADMIN');
+          if (dashTitle) dashTitle.textContent = 'Atelier Command Center';
+          userProfileNames.forEach(el => el.textContent = 'Atelier Director');
+          userProfileEmails.forEach(el => el.textContent = 'director@stackly.com');
+          avatarInitials.forEach(el => el.textContent = 'A');
+
+          // Sidebars
+          if (customerSidebarNav) customerSidebarNav.classList.add('d-none');
+          if (adminSidebarNav) adminSidebarNav.classList.remove('d-none');
+
+          // Overview Dashboard Views
+          if (viewCustomerDashboard) viewCustomerDashboard.classList.add('d-none');
+          if (viewAdminDashboard) viewAdminDashboard.classList.remove('d-none');
+
+          // Furniture Views
+          if (customerFurnitureView) customerFurnitureView.classList.add('d-none');
+          if (adminFurnitureView) adminFurnitureView.classList.remove('d-none');
+
+          // Orders Views
+          if (customerOrdersView) customerOrdersView.classList.add('d-none');
+          if (adminOrdersView) adminOrdersView.classList.remove('d-none');
+
+          // Reset active tab to Overview
+          activateTab('dashboard', 'Store Overview', adminSidebarNav);
+
+        } else {
+          // Customer View State
+          roleBtnsCustomer.forEach(btn => {
+            btn.classList.add('active');
+            btn.style.background = 'var(--accent-cyan)';
+            btn.style.color = '#ffffff';
+          });
+          roleBtnsAdmin.forEach(btn => {
+            btn.classList.remove('active');
+            btn.style.background = 'transparent';
+            btn.style.color = 'var(--text-muted)';
+          });
+
+          userProfileRoles.forEach(el => el.textContent = 'CUSTOMER');
+          if (dashTitle) dashTitle.textContent = 'My Living Sanctuary';
+          
+          const namePart = email.split('@')[0];
+          const displayName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
+          userProfileNames.forEach(el => el.textContent = displayName);
+          userProfileEmails.forEach(el => el.textContent = email);
+          avatarInitials.forEach(el => el.textContent = displayName.charAt(0));
+
+          // Sidebars
+          if (customerSidebarNav) customerSidebarNav.classList.remove('d-none');
+          if (adminSidebarNav) adminSidebarNav.classList.add('d-none');
+
+          // Overview Dashboard Views
+          if (viewCustomerDashboard) viewCustomerDashboard.classList.remove('d-none');
+          if (viewAdminDashboard) viewAdminDashboard.classList.add('d-none');
+
+          // Furniture Views
+          if (customerFurnitureView) customerFurnitureView.classList.remove('d-none');
+          if (adminFurnitureView) adminFurnitureView.classList.add('d-none');
+
+          // Orders Views
+          if (customerOrdersView) customerOrdersView.classList.remove('d-none');
+          if (adminOrdersView) adminOrdersView.classList.add('d-none');
+
+          // Reset active tab to Overview
+          activateTab('dashboard', 'Overview', customerSidebarNav);
+        }
+
+        // Setup settings email/name
+        const settingsEmail = document.getElementById('settingsEmail');
+        const settingsName = document.getElementById('settingsName');
+        const firstEmail = userProfileEmails[0];
+        const firstName = userProfileNames[0];
+        if (settingsEmail && firstEmail) settingsEmail.value = firstEmail.textContent;
+        if (settingsName && firstName) settingsName.value = firstName.textContent;
+
+        adjustMobileHeaderSpacing();
+      }
+
+      // Role button clicks for all role toggle instances
+      roleBtnsCustomer.forEach(btn => btn.addEventListener('click', () => applyRole('customer')));
+      roleBtnsAdmin.forEach(btn => btn.addEventListener('click', () => applyRole('admin')));
+
+      // Helper to activate a tab
+      function activateTab(tabName, displayLabel, parentNav) {
+        const allNavLinks = document.querySelectorAll('.sidebar-menu .menu-item');
+        allNavLinks.forEach(link => link.classList.remove('active'));
+
+        const targetLink = parentNav ? parentNav.querySelector('.menu-item[data-tab="' + tabName + '"]') : document.querySelector('.menu-item[data-tab="' + tabName + '"]');
+        if (targetLink) targetLink.classList.add('active');
+
+        // Hide all panels
+        document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.add('d-none'));
+
+        // Show target panel
+        const targetPanel = document.getElementById('panel-' + tabName);
+        if (targetPanel) {
+          targetPanel.classList.remove('d-none');
+        }
+
+        if (currentSectionLabel) {
+          currentSectionLabel.innerHTML = '<i class="fas fa-location-dot"></i> ' + displayLabel;
+        }
+      }
+
+      // Bind click handlers to all sidebar menu items
+      document.querySelectorAll('.sidebar-menu .menu-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.preventDefault();
+          const tabName = item.getAttribute('data-tab');
+          const displayLabel = item.textContent.trim();
+          const activeNav = role === 'admin' ? adminSidebarNav : customerSidebarNav;
+          activateTab(tabName, displayLabel, activeNav);
+
+          // Close mobile sidebar if open
+          closeSidebar();
+        });
+      });
+
+      // Initial activation based on current role
+      applyRole(role);
+
+      // Logout handler
+      const logoutLink = document.getElementById('logoutLink');
+      if (logoutLink) {
+        logoutLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          localStorage.removeItem('lumisUserEmail');
+          localStorage.removeItem('lumisUserRole');
+          window.location.href = 'login.html';
+        });
+      }
+
+      // Global Button Click Handler: Ensure ALL dashboard action buttons redirect to 404 page
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('button, .btn, .vendor-action-btn, .chart-filter-btn');
+        if (!btn) return;
+
+        // Skip internal navigation & controls:
+        if (
+          btn.id === 'sidebarToggle' ||
+          btn.id === 'sidebarCloseBtn' ||
+          btn.classList.contains('role-toggle-btn') ||
+          btn.classList.contains('roleBtnCustomer') ||
+          btn.classList.contains('roleBtnAdmin') ||
+          btn.id === 'roleBtnCustomer' ||
+          btn.id === 'roleBtnAdmin' ||
+          btn.id === 'logoutLink' ||
+          btn.closest('.sidebar-menu') ||
+          btn.closest('.sidebar-footer')
+        ) {
+          return;
+        }
+
+        e.preventDefault();
+        window.location.href = '404.html';
+      });
+
+      // Settings form submit -> redirect to 404 page
+      const settingForm = document.getElementById('settingForm');
+      if (settingForm) {
+        settingForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          window.location.href = '404.html';
+        });
+      }
+    });
+  </script>
+</body>
+</html>

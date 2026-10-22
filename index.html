@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STACKLY — Luxury Modern Furniture & Living</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Loader -->
+  <div class="page-loader" id="pageLoader">
+    <div class="loader-inner">
+      <div class="loader-icon"><i class="fas fa-couch"></i></div>
+      <div class="loader-logo">
+        <img src="stacklylogo-transparent.webp" alt="STACKLY Furniture" class="loader-logo-img" />
+      </div>
+      <div class="loader-bar"><div class="loader-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="cursorFollower"></div>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar navbar-expand-lg lumis-nav fixed-top" id="mainNav">
+    <div class="container-fluid px-4 px-lg-5">
+      <a class="navbar-brand nav-brand" href="#" onclick="showLoader();return false;">
+        <img src="stacklylogo-transparent.webp" alt="STACKLY Furniture" class="brand-logo-img" />
+      </a>
+      <button class="navbar-toggler lumis-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-label="Toggle navigation">
+        <span class="toggler-line"></span>
+        <span class="toggler-line"></span>
+        <span class="toggler-line"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav mx-auto gap-lg-2">
+          <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="collections.html">Collections</a></li>
+          <li class="nav-item"><a class="nav-link" href="blog.html">Journal</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+        <div class="nav-actions d-flex align-items-center gap-3">
+          <div class="nav-icons-group d-flex gap-3">
+            <a href="#" class="nav-icon-btn" title="Search" id="searchToggle"><i class="fas fa-search"></i></a>
+            <a href="#" class="nav-icon-btn" title="Wishlist" id="wishlistToggle"><i class="far fa-heart"></i><span class="cart-badge wishlist-badge">0</span></a>
+            <a href="#" class="nav-icon-btn cart-btn" title="Cart" id="cartToggle"><i class="fas fa-shopping-bag"></i><span class="cart-badge">0</span></a>
+          </div>
+          <a href="login.html" class="btn btn-outline-lumis">Login</a>
+          <a href="signup.html" class="btn btn-lumis">Sign Up</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero-section" id="home">
+    <!-- Animated Background Orbs -->
+    <div class="hero-orb orb-1"></div>
+    <div class="hero-orb orb-2"></div>
+    <div class="hero-orb orb-3"></div>
+
+    <div class="hero-grid">
+      <!-- Left Content -->
+      <div class="hero-content">
+        <div class="hero-eyebrow premium-fade-up">
+          <span class="eyebrow-dot"></span> New Collection 2026
+        </div>
+        <h1 class="hero-headline premium-text-reveal">
+          <span class="reveal-line"><span>Where Design</span></span>
+          <span class="reveal-line"><span><em>Meets</em></span></span>
+          <span class="reveal-line"><span class="headline-accent">Comfort.</span></span>
+        </h1>
+        <p class="hero-sub premium-fade-up">
+          Handcrafted, sustainable furniture sculpted for modern architectural living. Timeless aesthetics, master artisan joinery, and organic natural materials.
+        </p>
+        <div class="hero-cta-group premium-fade-up">
+          <a href="collections.html" class="btn btn-lumis btn-lg hero-cta-primary">
+            Explore Living <i class="fas fa-arrow-right ms-2"></i>
+          </a>
+          <a href="#lookbook" class="hero-cta-text">
+            <span class="play-icon"><i class="fas fa-play"></i></span> Lookbook 2026
+          </a>
+        </div>
+        <div class="hero-stats premium-fade-up">
+          <div class="stat"><span class="stat-num" data-target="12">0</span><span>K+</span><p>Happy Homes</p></div>
+          <div class="stat-divider"></div>
+          <div class="stat"><span class="stat-num" data-target="450">0</span><span>+</span><p>Designs</p></div>
+          <div class="stat-divider"></div>
+          <div class="stat"><span class="stat-num" data-target="18">0</span><span>yr</span><p>Craft Heritage</p></div>
+        </div>
+      </div>
+
+      <!-- Right Visual -->
+      <div class="hero-visual">
+        <div class="hero-img-main reveal-scale">
+          <div class="hero-slides">
+            <div class="hero-slide active" data-label="Best Seller" data-name="Aurelia Velvet Sofa" data-price="$2,450">
+              <picture>
+                <source srcset="assets/images/furniture-sofa-emerald.webp" type="image/webp" />
+                <img src="assets/images/furniture-sofa-emerald.webp" alt="Aurelia Velvet Sofa" loading="eager" />
+              </picture>
+            </div>
+            <div class="hero-slide" data-label="Handcrafted" data-name="Nordic Lounge Chair" data-price="$890">
+              <picture>
+                <source srcset="assets/images/furniture-chair-nordic.webp" type="image/webp" />
+                <img src="assets/images/furniture-chair-nordic.webp" alt="Nordic Lounge Chair" loading="lazy" />
+              </picture>
+            </div>
+            <div class="hero-slide" data-label="New Arrival" data-name="Artisan Walnut Table" data-price="$1,850">
+              <picture>
+                <source srcset="assets/images/furniture-table-dining.webp" type="image/webp" />
+                <img src="assets/images/furniture-table-dining.webp" alt="Artisan Walnut Table" loading="lazy" />
+              </picture>
+            </div>
+          </div>
+        </div>
+        <div class="hero-img-badge">
+          <div class="badge-content">
+            <span class="badge-label">Best Seller</span>
+            <span class="badge-name">Aurelia Velvet Sofa</span>
+            <span class="badge-price">$2,450</span>
+          </div>
+        </div>
+        <div class="hero-img-float float-1">
+          <picture>
+            <source srcset="assets/images/furniture-lamp-sculptural.webp" type="image/webp" />
+            <img src="assets/images/furniture-lamp-sculptural.webp" alt="Sculptural Pendant Lamp" loading="lazy" />
+          </picture>
+        </div>
+        <div class="hero-img-float float-2">
+          <picture>
+            <source srcset="assets/images/furniture-stool-oak.webp" type="image/webp" />
+            <img src="assets/images/furniture-stool-oak.webp" alt="Solid Oak Accent Stool" loading="lazy" />
+          </picture>
+        </div>
+        <!-- Decorative -->
+        <div class="hero-ring"></div>
+        <div class="hero-dots"></div>
+      </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+
+    <!-- Marquee -->
+    <div class="hero-marquee">
+      <div class="marquee-track">
+        <span>Living Room</span><span class="marquee-dot">•</span>
+        <span>Bedroom Suites</span><span class="marquee-dot">•</span>
+        <span>Dining Sets</span><span class="marquee-dot">•</span>
+        <span>Lounge Chairs</span><span class="marquee-dot">•</span>
+        <span>Solid Oak Tables</span><span class="marquee-dot">•</span>
+        <span>Study & Desks</span><span class="marquee-dot">•</span>
+        <span>Modular Sofas</span><span class="marquee-dot">•</span>
+        <span>Artisanal Lighting</span><span class="marquee-dot">•</span>
+        <span>Living Room</span><span class="marquee-dot">•</span>
+        <span>Bedroom Suites</span><span class="marquee-dot">•</span>
+        <span>Dining Sets</span><span class="marquee-dot">•</span>
+        <span>Lounge Chairs</span><span class="marquee-dot">•</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CATEGORIES ===== -->
+  <section class="categories-section" id="collections">
+    <div class="container">
+      <div class="section-header text-center reveal-up">
+        <span class="section-eyebrow">Curated Living Spaces</span>
+        <h2 class="section-title">Shop by Category</h2>
+      </div>
+      <div class="row g-4 mt-2">
+        <div class="col-6 col-lg-3 reveal-up delay-1">
+          <div class="cat-card" data-label="Living Room">
+            <div class="cat-img-wrap">
+              <picture>
+                <source srcset="assets/images/furniture-cat-living.webp" type="image/webp" />
+                <img src="assets/images/furniture-cat-living.webp" alt="Living Room Furniture" loading="lazy" />
+              </picture>
+            </div>
+            <div class="cat-info">
+              <h3>Living Room</h3>
+              <span>48 Designs</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3 reveal-up delay-2">
+          <div class="cat-card" data-label="Bedroom">
+            <div class="cat-img-wrap">
+              <picture>
+                <source srcset="assets/images/furniture-cat-bedroom.webp" type="image/webp" />
+                <img src="assets/images/furniture-cat-bedroom.webp" alt="Bedroom Furniture" loading="lazy" />
+              </picture>
+            </div>
+            <div class="cat-info">
+              <h3>Bedroom</h3>
+              <span>63 Designs</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3 reveal-up delay-3">
+          <div class="cat-card" data-label="Dining & Kitchen">
+            <div class="cat-img-wrap">
+              <picture>
+                <source srcset="assets/images/furniture-cat-dining.webp" type="image/webp" />
+                <img src="assets/images/furniture-cat-dining.webp" alt="Dining Room Furniture" loading="lazy" />
+              </picture>
+            </div>
+            <div class="cat-info">
+              <h3>Dining & Kitchen</h3>
+              <span>31 Designs</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3 reveal-up delay-4">
+          <div class="cat-card" data-label="Office & Study">
+            <div class="cat-img-wrap">
+              <picture>
+                <source srcset="assets/images/furniture-cat-office.webp" type="image/webp" />
+                <img src="assets/images/furniture-cat-office.webp" alt="Office and Study Furniture" loading="lazy" />
+              </picture>
+            </div>
+            <div class="cat-info">
+              <h3>Office & Study</h3>
+              <span>27 Designs</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURED PRODUCTS ===== -->
+  <section class="products-section" id="products">
+    <div class="container">
+      <div class="section-header d-flex justify-content-between align-items-end reveal-up">
+        <div>
+          <span class="section-eyebrow">Artisan Collection</span>
+          <h2 class="section-title">Signature Furniture</h2>
+        </div>
+        <a href="collections.html" class="view-all-link d-none d-md-flex">View All <i class="fas fa-arrow-right ms-2"></i></a>
+      </div>
+      <div class="row g-4 mt-1">
+        <!-- Product 1 -->
+        <div class="col-12 col-sm-6 col-lg-3 reveal-up delay-1">
+          <div class="product-card">
+            <div class="product-img-wrap">
+              <picture>
+                <source srcset="assets/images/furniture-prod-aurelia.webp" type="image/webp" />
+                <img src="assets/images/furniture-prod-aurelia.webp" alt="Aurelia Emerald Velvet Sofa" loading="lazy" />
+              </picture>
+              <div class="product-actions">
+                <button class="pact-btn" title="Wishlist"><i class="far fa-heart"></i></button>
+                <button class="pact-btn" title="Add to Cart"><i class="fas fa-shopping-bag"></i></button>
+              </div>
+              <div class="product-tag">New</div>
+            </div>
+            <div class="product-info">
+              <p class="product-cat">Living Room</p>
+              <h4 class="product-name">Aurelia Velvet Sofa</h4>
+              <div class="product-rating">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                <span>(128)</span>
+              </div>
+              <div class="product-price">
+                <span class="price-new">$2,450</span>
+                <span class="price-old">$2,950</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Product 2 -->
+        <div class="col-12 col-sm-6 col-lg-3 reveal-up delay-2">
+          <div class="product-card">
+            <div class="product-img-wrap">
+              <picture>
+                <source srcset="assets/images/furniture-prod-nordic.webp" type="image/webp" />
+                <img src="assets/images/furniture-prod-nordic.webp" alt="Nordic Oak Lounge Armchair" loading="lazy" />
+              </picture>
+              <div class="product-actions">
+                <button class="pact-btn" title="Wishlist"><i class="far fa-heart"></i></button>
+                <button class="pact-btn" title="Add to Cart"><i class="fas fa-shopping-bag"></i></button>
+              </div>
+              <div class="product-tag sale">Sale</div>
+            </div>
+            <div class="product-info">
+              <p class="product-cat">Chairs & Armchairs</p>
+              <h4 class="product-name">Nordic Lounge Chair</h4>
+              <div class="product-rating">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                <span>(94)</span>
+              </div>
+              <div class="product-price">
+                <span class="price-new">$890</span>
+                <span class="price-old">$1,200</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Product 3 -->
+        <div class="col-12 col-sm-6 col-lg-3 reveal-up delay-3">
+          <div class="product-card">
+            <div class="product-img-wrap">
+              <picture>
+                <source srcset="assets/images/furniture-prod-marble-table.webp" type="image/webp" />
+                <img src="assets/images/furniture-prod-marble-table.webp" alt="Carrara Marble Coffee Table" loading="lazy" />
+              </picture>
+              <div class="product-actions">
+                <button class="pact-btn" title="Wishlist"><i class="far fa-heart"></i></button>
+                <button class="pact-btn" title="Add to Cart"><i class="fas fa-shopping-bag"></i></button>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-cat">Tables & Consoles</p>
+              <h4 class="product-name">Carrara Marble Table</h4>
+              <div class="product-rating">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                <span>(57)</span>
+              </div>
+              <div class="product-price">
+                <span class="price-new">$1,150</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Product 4 -->
+        <div class="col-12 col-sm-6 col-lg-3 reveal-up delay-4">
+          <div class="product-card">
+            <div class="product-img-wrap">
+              <picture>
+                <source srcset="assets/images/furniture-prod-kyoto-bed.webp" type="image/webp" />
+                <img src="assets/images/furniture-prod-kyoto-bed.webp" alt="Kyoto Solid Teak Bed Frame" loading="lazy" />
+              </picture>
+              <div class="product-actions">
+                <button class="pact-btn" title="Wishlist"><i class="far fa-heart"></i></button>
+                <button class="pact-btn" title="Add to Cart"><i class="fas fa-shopping-bag"></i></button>
+              </div>
+              <div class="product-tag">Featured</div>
+            </div>
+            <div class="product-info">
+              <p class="product-cat">Bedroom</p>
+              <h4 class="product-name">Kyoto Teak Bed Frame</h4>
+              <div class="product-rating">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                <span>(211)</span>
+              </div>
+              <div class="product-price">
+                <span class="price-new">$3,250</span>
+                <span class="price-old">$3,800</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section class="about-section" id="about">
+    <div class="about-bg-shape"></div>
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6 reveal-left">
+          <div class="about-img-grid">
+            <div class="about-img-main">
+              <picture>
+                <source srcset="assets/images/furniture-about-showroom.webp" type="image/webp" />
+                <img src="assets/images/furniture-about-showroom.webp" alt="STACKLY Furniture Atelier" loading="lazy" />
+              </picture>
+            </div>
+            <div class="about-img-side">
+              <picture>
+                <source srcset="assets/images/furniture-about-craft.webp" type="image/webp" />
+                <img src="assets/images/furniture-about-craft.webp" alt="Artisan Woodworking & Joinery" loading="lazy" />
+              </picture>
+            </div>
+            <div class="about-award-badge">
+              <i class="fas fa-award"></i>
+              <span>Award Winning<br>Design Studio</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 reveal-right">
+          <span class="section-eyebrow">Our Philosophy</span>
+          <h2 class="section-title">Selected For<br><em>Warmth & Longevity</em></h2>
+          <p class="about-text">Since 2007, STACKLY has crafted heirloom-grade furniture for modern architectural homes. We unite Scandinavian minimalism with master woodworking traditions, sustainable forest sourcing, and honest organic textures.</p>
+          <p class="about-text">Every piece is sculpted with purpose. We meticulously test timber grain balance, structural stability, sustainable upholstery weaves, and non-toxic botanical finishes before any design enters our permanent collection.</p>
+          <div class="about-pillars">
+            <div class="pillar">
+              <div class="pillar-icon"><i class="fas fa-tree"></i></div>
+              <div><h5>FSC Hardwoods</h5><p>Responsibly harvested white oak, walnut, and teak</p></div>
+            </div>
+            <div class="pillar">
+              <div class="pillar-icon"><i class="fas fa-couch"></i></div>
+              <div><h5>Master Crafted</h5><p>Traditional mortise & tenon joinery with hand-finished edges</p></div>
+            </div>
+            <div class="pillar">
+              <div class="pillar-icon"><i class="fas fa-shield-alt"></i></div>
+              <div><h5>10-Year Warranty</h5><p>Heirloom construction built to endure generations of living</p></div>
+            </div>
+          </div>
+          <a href="about.html" class="btn btn-lumis mt-4">Explore Our Story <i class="fas fa-arrow-right ms-2"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== THE ATELIER MATERIALS ===== -->
+  <section class="materials-section" id="materials">
+    <div class="container">
+      <div class="section-header text-center reveal-up">
+        <span class="section-eyebrow">Conscious Sourcing</span>
+        <h2 class="section-title">Heirloom Materials</h2>
+      </div>
+      <div class="row g-4 mt-2">
+        <!-- Material 1 -->
+        <div class="col-6 col-md-3 reveal-up delay-1">
+          <div class="material-card">
+            <div class="material-img-wrap">
+              <picture>
+                <source srcset="assets/images/furniture-mat-oak.webp" type="image/webp" />
+                <img src="assets/images/furniture-mat-oak.webp" alt="Solid White Oak & Walnut" loading="lazy" />
+              </picture>
+            </div>
+            <div class="material-info">
+              <h3>White Oak & Walnut</h3>
+              <p>Kiln-dried sustainable hardwoods selected for rich grain character, strength, and tactile warmth.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Material 2 -->
+        <div class="col-6 col-md-3 reveal-up delay-2">
+          <div class="material-card">
+            <div class="material-img-wrap">
+              <picture>
+                <source srcset="assets/images/furniture-mat-linen.webp" type="image/webp" />
+                <img src="assets/images/furniture-mat-linen.webp" alt="Belgian Linen and Leather" loading="lazy" />
+              </picture>
+            </div>
+            <div class="material-info">
+              <h3>Belgian Linen & Leather</h3>
+              <p>Supple Italian full-grain leathers and breathable stonewashed linens that patina gracefully over time.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Material 3 -->
+        <div class="col-6 col-md-3 reveal-up delay-3">
+          <div class="material-card">
+            <div class="material-img-wrap">
+              <picture>
+                <source srcset="assets/images/furniture-mat-joinery.webp" type="image/webp" />
+                <img src="assets/images/furniture-mat-joinery.webp" alt="Mortise and Tenon Joinery" loading="lazy" />
+              </picture>
+            </div>
+            <div class="material-info">
+              <h3>Precision Joinery</h3>
+              <p>Traditional wood-to-wood joinery methods eliminating artificial fasteners for exceptional structural integrity.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Material 4 -->
+        <div class="col-6 col-md-3 reveal-up delay-4">
+          <div class="material-card">
+            <div class="material-img-wrap">
+              <picture>
+                <source srcset="assets/images/furniture-mat-finish.webp" type="image/webp" />
+                <img src="assets/images/furniture-mat-finish.webp" alt="Organic Beeswax & Oil Finishes" loading="lazy" />
+              </picture>
+            </div>
+            <div class="material-info">
+              <h3>Zero-VOC Finishes</h3>
+              <p>Cold-pressed botanical oils and natural beeswax that protect timber while allowing it to breathe purely.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PROMO BANNER ===== -->
+  <section class="promo-banner">
+    <!-- Background Video -->
+    <video autoplay loop muted playsinline class="promo-bg-video">
+      <source src="assets/videos/promo_bg.mp4" type="video/mp4" />
+    </video>
+    <div class="promo-overlay"></div>
+    
+    <div class="promo-content">
+      <h2 class="promo-headline reveal-up">Elevate Your Living Sanctuary</h2>
+      <p class="promo-sub reveal-up delay-1">Discover bespoke handcrafted furniture, modular sofas, and seasonal designer living bundles</p>
+      <a href="collections.html" class="btn btn-promo reveal-up delay-2">Explore Seasonal Offers</a>
+    </div>
+  </section>
+
+  <!-- ===== CURATED SPACES LOOKBOOK ===== -->
+  <section class="lookbook-section" id="lookbook">
+    <div class="container">
+      <div class="section-header text-center reveal-up">
+        <span class="section-eyebrow">Lookbook 2026</span>
+        <h2 class="section-title">Complete Curated Spaces</h2>
+      </div>
+      <div class="row g-4 mt-2">
+        <!-- Look 1 -->
+        <div class="col-md-4 reveal-up delay-1">
+          <div class="lookbook-card">
+            <div class="lookbook-img-wrap">
+              <picture>
+                <source srcset="assets/images/furniture-lookbook-living.webp" type="image/webp" />
+                <img src="assets/images/furniture-lookbook-living.webp" alt="Minimalist Living Room Space" loading="lazy" />
+              </picture>
+            </div>
+            <div class="lookbook-overlay">
+              <div class="lookbook-content">
+                <span class="lookbook-tag">01. Living Room</span>
+                <h3>The Minimalist Lounge</h3>
+                <p>Organic linen modular seating, solid oak shelving, and marble surfaces harmonized for calm conversation.</p>
+                <div class="lookbook-products">
+                  <span>Featured: Aurelia Velvet Sofa, Carrara Marble Table, Oak Stool</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Look 2 -->
+        <div class="col-md-4 reveal-up delay-2">
+          <div class="lookbook-card">
+            <div class="lookbook-img-wrap">
+              <picture>
+                <source srcset="assets/images/furniture-lookbook-dining.webp" type="image/webp" />
+                <img src="assets/images/furniture-lookbook-dining.webp" alt="Sunlit Mid-Century Dining Space" loading="lazy" />
+              </picture>
+            </div>
+            <div class="lookbook-overlay">
+              <div class="lookbook-content">
+                <span class="lookbook-tag">02. Dining Area</span>
+                <h3>Sunlit Artisan Dining</h3>
+                <p>Extended solid walnut dining table accompanied by curved wooden back chairs and warm architectural lighting.</p>
+                <div class="lookbook-products">
+                  <span>Featured: Artisan Walnut Table, Nordic Dining Chairs, Sculptural Pendant</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Look 3 -->
+        <div class="col-md-4 reveal-up delay-3">
+          <div class="lookbook-card">
+            <div class="lookbook-img-wrap">
+              <picture>
+                <source srcset="assets/images/furniture-lookbook-bedroom.webp" type="image/webp" />
+                <img src="assets/images/furniture-lookbook-bedroom.webp" alt="Serene Japandi Bedroom Sanctuary" loading="lazy" />
+              </picture>
+            </div>
+            <div class="lookbook-overlay">
+              <div class="lookbook-content">
+                <span class="lookbook-tag">03. Bedroom</span>
+                <h3>Japandi Master Suite</h3>
+                <p>Low-profile teak platform bed, floating nightstands, and breathable linen textures for tranquil rest.</p>
+                <div class="lookbook-products">
+                  <span>Featured: Kyoto Teak Bed, Linear Floating Nightstand, Linen Bedding</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TOP DESIGN BRANDS ===== -->
+  <section class="section brands-section" id="brands" aria-label="Top design partners">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label">Design Partners</div>
+        <h2 class="section-title">Iconic <span class="highlight">Design Houses</span></h2>
+        <p class="section-subtitle">We collaborate with celebrated European and Scandinavian furniture studios and ateliers</p>
+      </div>
+
+      <div class="brand-logos-grid" data-stagger="0.06">
+        <div class="brand-item reveal tilt-card">
+          <span class="brand-name" style="color:rgba(255,255,255,0.7)">Herman Miller</span>
+        </div>
+        <div class="brand-item reveal tilt-card">
+          <span class="brand-name" style="color:rgba(255,255,255,0.7)">Knoll</span>
+        </div>
+        <div class="brand-item reveal tilt-card">
+          <span class="brand-name" style="color:rgba(255,255,255,0.7)">Muuto</span>
+        </div>
+        <div class="brand-item reveal tilt-card">
+          <span class="brand-name" style="color:rgba(255,255,255,0.7)">HAY</span>
+        </div>
+        <div class="brand-item reveal tilt-card">
+          <span class="brand-name" style="color:rgba(255,255,255,0.7)">Vitra</span>
+        </div>
+        <div class="brand-item reveal tilt-card">
+          <span class="brand-name" style="color:rgba(255,255,255,0.7)">Carl Hansen</span>
+        </div>
+        <div class="brand-item reveal tilt-card">
+          <span class="brand-name" style="color:rgba(255,255,255,0.7)">B&B Italia</span>
+        </div>
+        <div class="brand-item reveal tilt-card">
+          <span class="brand-name" style="color:rgba(255,255,255,0.7)">Poltrona Frau</span>
+        </div>
+        <div class="brand-item reveal tilt-card">
+          <span class="brand-name" style="color:rgba(255,255,255,0.7)">Fritz Hansen</span>
+        </div>
+        <div class="brand-item reveal tilt-card">
+          <span class="brand-name" style="color:rgba(255,255,255,0.7)">Ligne Roset</span>
+        </div>
+        <div class="brand-item reveal tilt-card">
+          <span class="brand-name" style="color:rgba(255,255,255,0.7)">Cassina</span>
+        </div>
+        <div class="brand-item reveal tilt-card">
+          <span class="brand-name" style="color:rgba(255,255,255,0.7)">BoConcept</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIALS ===== -->
+  <section class="testimonials-section">
+    <div class="container">
+      <div class="section-header text-center reveal-up">
+        <span class="section-eyebrow">Homeowner Stories</span>
+        <h2 class="section-title">Loved By Design Connoisseurs</h2>
+      </div>
+      <div class="testimonials-track reveal-up delay-1">
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-text">"The Aurelia Velvet Sofa completely transformed our living space. The timber craftsmanship and the lush texture of the velvet are extraordinary."</p>
+          <div class="testi-author">
+            <div class="testi-avatar"><img src="assets/images/w5.webp" alt="Sarah M." style="width: 100%; height: 100%; object-fit: cover;" /></div>
+            <div><strong>Sarah M.</strong><span>Interior Architect, NYC</span></div>
+          </div>
+        </div>
+        <div class="testi-card featured">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-text">"STACKLY makes furnishing a home an absolute pleasure. White-glove delivery, seamless assembly, and heirloom build quality that will last decades."</p>
+          <div class="testi-author">
+            <div class="testi-avatar"><img src="assets/images/m7.webp" alt="Raj K." style="width: 100%; height: 100%; object-fit: cover;" /></div>
+            <div><strong>Raj K.</strong><span>Design Director, London</span></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-text">"We furnished our master suite with the Kyoto bed and nightstands. The teak grain is gorgeous and the understated Japanese minimalism brings so much calm."</p>
+          <div class="testi-author">
+            <div class="testi-avatar"><img src="assets/images/w7.webp" alt="Elena V." style="width: 100%; height: 100%; object-fit: cover;" /></div>
+            <div><strong>Elena V.</strong><span>Stylist & Homeowner, Paris</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="section faq-section" id="faq" aria-label="Frequently asked questions">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label">Got Questions?</div>
+        <h2 class="section-title">Frequently Asked <span class="highlight">Questions</span></h2>
+        <p class="section-subtitle">Find quick answers to common questions about buying handcrafted furniture with STACKLY</p>
+      </div>
+
+      <div class="faq-grid">
+        <div>
+          <div class="accordion-item reveal">
+            <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+              <span>How does white-glove delivery and assembly work?</span>
+              <span class="accordion-icon" aria-hidden="true">+</span>
+            </div>
+            <div class="accordion-body" role="region">
+              <div class="accordion-content">We provide complimentary white-glove delivery for all large furniture pieces. Our dedicated logistics team brings your order directly into your room of choice, inspects, fully assembles each piece, and removes all packaging materials.</div>
+            </div>
+          </div>
+
+          <div class="accordion-item reveal delay-1">
+            <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+              <span>Are all pieces made from sustainable solid hardwood?</span>
+              <span class="accordion-icon" aria-hidden="true">+</span>
+            </div>
+            <div class="accordion-body" role="region">
+              <div class="accordion-content">Absolutely! Every piece in our collection is handcrafted from 100% FSC-certified solid hardwoods such as European white oak, American walnut, and kiln-dried teak. Every piece is covered by our comprehensive 10-year structural warranty.</div>
+            </div>
+          </div>
+
+          <div class="accordion-item reveal delay-2">
+            <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+              <span>What financing and payment options are available?</span>
+              <span class="accordion-icon" aria-hidden="true">+</span>
+            </div>
+            <div class="accordion-body" role="region">
+              <div class="accordion-content">We offer 0% APR financing for 6, 12, and 24 months on orders above $500 through top financing partners. We also support all major credit cards, Apple Pay, PayPal, and bank transfers with full buyer protection.</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="accordion-item reveal">
+            <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+              <span>What is your 30-day in-home trial policy?</span>
+              <span class="accordion-icon" aria-hidden="true">+</span>
+            </div>
+            <div class="accordion-body" role="region">
+              <div class="accordion-content">We believe you need to experience furniture in your natural lighting and living space. If you're not completely in love within 30 days, we will arrange a white-glove pickup from your room and issue a 100% full refund.</div>
+            </div>
+          </div>
+
+          <div class="accordion-item reveal delay-1">
+            <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+              <span>Can I customize timber finishes or upholstery fabric?</span>
+              <span class="accordion-icon" aria-hidden="true">+</span>
+            </div>
+            <div class="accordion-body" role="region">
+              <div class="accordion-content">Yes! We offer tailored custom fabric choices, leather grades, and timber wood stains on our sofas, dining chairs, and bed frames. Contact our design concierge team or order a complimentary fabric swatch box to your home.</div>
+            </div>
+          </div>
+
+          <div class="accordion-item reveal delay-2">
+            <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+              <span>How do I care for solid wood and natural textiles?</span>
+              <span class="accordion-icon" aria-hidden="true">+</span>
+            </div>
+            <div class="accordion-body" role="region">
+              <div class="accordion-content">Each order includes a bespoke STACKLY Care Kit containing natural beeswax balm and organic fabric conditioner. We also provide step-by-step timber maintenance guides on our journal to keep your pieces looking pristine for decades.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BLOG / JOURNAL ===== -->
+  <section class="blog-section" id="blog">
+    <div class="container">
+      <div class="section-header d-flex justify-content-between align-items-end reveal-up">
+        <div>
+          <span class="section-eyebrow">Design Journal</span>
+          <h2 class="section-title">Stories & Architectural Guides</h2>
+        </div>
+        <a href="blog.html" class="view-all-link d-none d-md-flex">All Stories <i class="fas fa-arrow-right ms-2"></i></a>
+      </div>
+      <div class="row g-4 mt-1">
+        <div class="col-lg-6 reveal-left">
+          <div class="blog-card blog-card-featured">
+            <div class="blog-img-wrap">
+              <picture>
+                <source srcset="assets/images/furniture-blog-sofa.webp" type="image/webp" />
+                <img src="assets/images/furniture-blog-sofa.webp" alt="How to Choose the Perfect Sofa" loading="lazy" />
+              </picture>
+            </div>
+            <div class="blog-meta"><span>Interior Design</span><span>October 18, 2026</span></div>
+            <h3 class="blog-title">How to Choose the Perfect Sofa for Small Spaces</h3>
+            <p class="blog-excerpt">A practical guide to proportions, modular configurations, performance fabrics, and visual balance in modern spaces...</p>
+            <a href="blog.html" class="blog-read-link">Read More <i class="fas fa-arrow-right ms-1"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-6 reveal-right">
+          <div class="blog-card blog-card-sm">
+            <div class="blog-img-wrap">
+              <picture>
+                <source srcset="assets/images/furniture-blog-wood.webp" type="image/webp" />
+                <img src="assets/images/furniture-blog-wood.webp" alt="The Art of Woodworking" loading="lazy" />
+              </picture>
+            </div>
+            <div>
+              <div class="blog-meta"><span>Craftsmanship</span><span>September 28, 2026</span></div>
+              <h3 class="blog-title">The Art of Sustainable Woodworking & Joinery</h3>
+              <a href="blog.html" class="blog-read-link">Read More <i class="fas fa-arrow-right ms-1"></i></a>
+            </div>
+          </div>
+          <div class="blog-card blog-card-sm">
+            <div class="blog-img-wrap">
+              <picture>
+                <source srcset="assets/images/furniture-blog-lighting.webp" type="image/webp" />
+                <img src="assets/images/furniture-blog-lighting.webp" alt="Sculptural Lighting" loading="lazy" />
+              </picture>
+            </div>
+            <div>
+              <div class="blog-meta"><span>Aesthetics</span><span>September 14, 2026</span></div>
+              <h3 class="blog-title">Sculptural Lighting & Texture in Modern Living</h3>
+              <a href="blog.html" class="blog-read-link">Read More <i class="fas fa-arrow-right ms-1"></i></a>
+            </div>
+          </div>
+          <div class="blog-card blog-card-sm">
+            <div class="blog-img-wrap">
+              <picture>
+                <source srcset="assets/images/furniture-blog-office.webp" type="image/webp" />
+                <img src="assets/images/furniture-blog-office.webp" alt="Home Office Design" loading="lazy" />
+              </picture>
+            </div>
+            <div>
+              <div class="blog-meta"><span>Workspace</span><span>August 24, 2026</span></div>
+              <h3 class="blog-title">Designing an Ergonomic & Calming Home Office</h3>
+              <a href="blog.html" class="blog-read-link">Read More <i class="fas fa-arrow-right ms-1"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DRAWER OVERLAY ===== -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+
+  <!-- ===== CART DRAWER ===== -->
+  <div class="drawer-panel" id="cartDrawer">
+    <div class="drawer-header">
+      <h3>Shopping Cart</h3>
+      <button class="drawer-close" id="cartClose">&times;</button>
+    </div>
+    <div class="drawer-body" id="cartBody">
+      <div class="drawer-empty">
+        <i class="fas fa-shopping-bag"></i>
+        <p>Your cart is empty</p>
+      </div>
+    </div>
+    <div class="drawer-footer">
+      <div class="drawer-total"><span>Total</span><span id="cartTotal">$0.00</span></div>
+      <a href="404.html" class="drawer-btn">Checkout</a>
+    </div>
+  </div>
+
+  <!-- ===== WISHLIST DRAWER ===== -->
+  <div class="drawer-panel" id="wishlistDrawer">
+    <div class="drawer-header">
+      <h3>Wishlist</h3>
+      <button class="drawer-close" id="wishlistClose">&times;</button>
+    </div>
+    <div class="drawer-body" id="wishlistBody">
+      <div class="drawer-empty">
+        <i class="far fa-heart"></i>
+        <p>Your wishlist is empty</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SEARCH OVERLAY ===== -->
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-overlay-panel">
+      <button class="search-close" id="searchClose">&times;</button>
+      <div class="search-inner">
+        <form id="searchForm" action="collections.html" method="GET">
+          <div class="search-field">
+            <i class="fas fa-search search-field-icon"></i>
+            <input type="text" name="search" class="search-input" id="searchInput" placeholder="Search sofas, dining tables, lounge chairs, bedroom..." autocomplete="off" />
+          </div>
+        </form>
+        <p class="search-hint">Press Enter to search all furniture collections</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="lumis-footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="row g-5">
+          <div class="col-lg-4">
+            <div class="footer-brand">
+              <a href="index.html"><img src="stacklylogo-transparent.webp" alt="STACKLY Furniture" class="footer-logo-img" /></a>
+            </div>
+            <p class="footer-tagline">Artisan-crafted furniture, sustainable hardwoods, and bespoke home furnishings for modern living spaces.</p>
+            <div class="footer-socials">
+              <a href="404.html" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+              <a href="404.html" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+              <a href="404.html" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+              <a href="404.html" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+          </div>
+          <div class="col-6 col-lg-2">
+            <h5 class="footer-heading">Quick Links</h5>
+            <ul class="footer-links">
+              <li><a href="index.html">Home</a></li>
+              <li><a href="about.html">About</a></li>
+              <li><a href="collections.html">Collections</a></li>
+              <li><a href="blog.html">Journal</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+          <div class="col-6 col-lg-2">
+            <h5 class="footer-heading">Collections</h5>
+            <ul class="footer-links">
+              <li><a href="collections.html">Living Room</a></li>
+              <li><a href="collections.html">Bedroom Suites</a></li>
+              <li><a href="collections.html">Dining Sets</a></li>
+              <li><a href="collections.html">Home Office</a></li>
+              <li><a href="collections.html">Lighting & Decor</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-4">
+            <h5 class="footer-heading">Newsletter</h5>
+            <p class="footer-newsletter-text">Get new furniture releases, interior styling guides, and exclusive atelier offers in your inbox.</p>
+            <div class="footer-newsletter">
+              <form action="404.html" method="GET">
+                <input type="email" placeholder="Your email address" required pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.com$" oninput="this.setCustomValidity(''); if(this.value && !this.checkValidity()) this.setCustomValidity('Please enter a valid email address')" />
+                <button type="submit" aria-label="Subscribe"><i class="fas fa-arrow-right"></i></button>
+              </form>
+            </div>
+            <div class="footer-trust">
+              <span><i class="fas fa-lock"></i> <a href="404.html">Secure Checkout</a></span>
+              <span><i class="fas fa-truck-moving"></i> <a href="404.html">White-Glove Delivery</a></span>
+              <span><i class="fas fa-undo"></i> <a href="404.html">30-Day Trial</a></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+        <p>&copy; 2026 STACKLY Furniture & Living. All rights reserved.</p>
+        <div class="footer-legal">
+          <a href="404.html">Privacy</a>
+          <a href="404.html">Terms</a>
+          <a href="404.html">Cookies</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top -->
+  <button class="back-to-top" id="backToTop" title="Back to top"><i class="fas fa-chevron-up"></i></button>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
